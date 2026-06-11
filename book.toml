@@ -1,0 +1,9 @@
+[book]
+authors = ["Vanuan"]
+language = "en"
+src = "src"
+title = "Rust and GPUI: Native Apps for the Rest of Us"
+
+[output.html]
+git-repository-url = "https://github.com/vanuan/gpui-book"
+preferred-dark-theme = "navy"
