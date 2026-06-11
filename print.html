@@ -1,0 +1,1650 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Rust and GPUI: Native Apps for the Rest of Us</title>
+        <meta name="robots" content="noindex">
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-0392ca55.css">
+        <link rel="stylesheet" href="css/chrome-fc474251.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-74039e40.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-a483e324.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust and GPUI: Native Apps for the Rest of Us</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/vanuan/gpui-book" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="prologue"><a class="header" href="#prologue">Prologue</a></h1>
+<p>You’ve heard about Rust.</p>
+<p>Maybe a colleague wouldn’t stop talking about it. Maybe you saw it top the “most loved language” survey for the eighth year running and wondered what the fuss was about. Maybe you’ve watched the systems programming world slowly tilt in its direction and filed it under “should probably look at that eventually.”</p>
+<p>Eventually keeps getting postponed.</p>
+<p>Rust has a reputation: steep learning curve, cryptic compiler errors, ownership rules that feel academic until they suddenly click. There’s always a more urgent deadline, a more familiar tool, a good enough solution in the language you already know.</p>
+<p>This book is for the engineer who never quite got the activation energy.</p>
+<p>If you’re coming from C++ — you already understand memory, you’re just tired of the preprocessor, the build system archaeology, the use-after-free that only manifests in release builds on one platform. You know the performance is worth it. You’ve quietly wondered if the ceremony has to be this expensive.</p>
+<p>If you’re coming from TypeScript and React — you understand components, reactivity, and utility-first styling. You’ve shipped products in Electron and watched a 200MB bundle download just to open a settings window. You’ve accepted that “native feel” was someone else’s problem and explained to a non-technical founder why your desktop app needs 400MB of RAM at idle.</p>
+<p>Both of you end up in the same place: wanting something better, not quite finding the reason to start.</p>
+<p>GPUI is that reason. It’s the UI framework the Zed editor was built with. It thinks in components. It styles with a fluent API that maps directly to your Tailwind intuitions. It runs on a language that makes the promises JavaScript never could — no garbage collector, no IPC bridge between main and renderer, no Chromium. Real cross-platform native desktop apps, small enough to email, fast enough to feel instant.</p>
+<p>And agentic coding changes the calculus entirely. You don’t have to hold the entire borrow checker in your head on day one. You have a collaborator that knows the rules, catches the compiler errors with you, and explains the why while you focus on building something real. The learning curve is still there — but it’s no longer something you climb alone.</p>
+<p>This book teaches Rust through GPUI. Every language concept arrives exactly when the framework demands it, motivated by something you’ve already felt as a limitation. By the end you’ll have built and shipped a cross-platform native desktop application — and you’ll understand why so many engineers who finally made the jump say they wish they’d done it sooner.</p>
+<p>Let’s start by opening a window.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-1-open-a-window"><a class="header" href="#chapter-1-open-a-window">Chapter 1: Open a Window</a></h1>
+<p>Let’s skip the theory. Before we explain anything, we’re going to put a native window on your screen.</p>
+<p>First, install Rust. If you haven’t already:</p>
+<pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+</code></pre>
+<p>This installs <code>rustc</code> (the compiler) and <code>cargo</code> (the package manager — think npm, but for Rust). One command, no separate installs, no PATH archaeology. When it’s done, create your first project:</p>
+<pre><code class="language-bash">cargo new gpui_hello
+cd gpui_hello
+cargo add gpui
+</code></pre>
+<p><code>cargo new</code> is your <code>npm init</code>. <code>cargo add gpui</code> pulls in the GPUI framework and everything it depends on. Open <code>src/main.rs</code>, delete what’s there, and paste this:</p>
+<pre class="playground"><code class="language-rust">use gpui::*;
+
+struct HelloWorld;
+
+impl Render for HelloWorld {
+    fn render(&amp;mut self, _window: &amp;mut Window, _cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
+        div()
+            .flex()
+            .size_full()
+            .justify_center()
+            .items_center()
+            .bg(rgb(0x2d3748))
+            .text_color(rgb(0xffffff))
+            .child("Hello, GPUI!")
+    }
+}
+
+fn main() {
+    App::new().run(|cx: &amp;mut App| {
+        cx.open_window(WindowOptions::default(), |_, cx| {
+            cx.new(|_| HelloWorld)
+        });
+    });
+}</code></pre>
+<p>Run it:</p>
+<pre><code class="language-bash">cargo run
+</code></pre>
+<p>The first build takes a minute — Rust is compiling GPUI and its dependencies from source, something that happens once and then caches. After that, a native window appears on your screen with “Hello, GPUI!” centered on a dark background. No Electron wrapper. No local web server. No Chromium. Native pixels, drawn directly by your GPU.</p>
+<hr>
+<p><strong>What Just Happened</strong></p>
+<p>If you’re coming from the web world, those twenty lines will feel surprisingly familiar.</p>
+<p><code>App::new().run()</code> is your <code>ReactDOM.render()</code>. It initializes the application, hooks into your operating system’s native event loop, and hands control to the closure — the <code>|cx: &amp;mut App| { ... }</code> block — where you set up your windows before the loop starts.</p>
+<p><code>cx.open_window()</code> asks the operating system for a literal window frame. The <code>cx</code> here is a <em>context object</em> — you’ll see it everywhere in GPUI. It’s your handle into the framework’s runtime, the thing you talk to when you want GPUI to do something on your behalf.</p>
+<p><code>HelloWorld</code> is your root component. Right now it’s an empty struct — just a named type with no data — but it’s about to become the home for your application state.</p>
+<p><code>impl Render for HelloWorld</code> is your component’s render method. Whenever the screen needs to update, GPUI calls this function and asks: what should I draw right now? You return a description of the UI — not pixels directly, but a blueprint — and GPUI handles the rest.</p>
+<p><code>div()</code> is where it starts feeling like Tailwind. GPUI’s layout engine is built on Flexbox, the same model powering every modern browser. The method chain reads almost like a class list: make it a flex container, fill the full size, center horizontally, center vertically, set the background color, set the text color, add a child. If you’ve written <code>.flex .h-full .w-full .justify-center .items-center</code> before, your hands already know the shape of this.</p>
+<hr>
+<p><strong>Making It Look Like an App</strong></p>
+<p>Static text centered on a background isn’t very interesting. Let’s make it look like something you’d actually ship. Replace the <code>Render</code> implementation:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Render for HelloWorld {
+    fn render(&amp;mut self, _window: &amp;mut Window, _cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
+        div()
+            .flex()
+            .flex_col()
+            .size_full()
+            .bg(rgb(0x1e1e1e))
+            .child(
+                div()
+                    .w_full()
+                    .p_4()
+                    .bg(rgb(0x3b82f6))
+                    .text_color(rgb(0xffffff))
+                    .text_xl()
+                    .font_weight(FontWeight::BOLD)
+                    .child("My Native App")
+            )
+            .child(
+                div()
+                    .flex_1()
+                    .p_6()
+                    .text_color(rgb(0xa0aec0))
+                    .child("Rendering at 120fps. No garbage collection pauses.")
+            )
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>Run it again. Try resizing the window. Notice how instantly the layout recalculates — no jank, no reflow flicker. You have a responsive flex layout with a header bar and a content area, zero CSS, zero HTML.</p>
+<p>The nesting model is direct: <code>.child()</code> takes anything that can be rendered and places it inside the current element. Layouts compose by nesting, exactly like JSX — except it’s all just Rust function calls returning descriptions that GPUI resolves into pixels.</p>
+<hr>
+<p><strong>What’s Missing</strong></p>
+<p>The app looks real but it’s completely static. Click anywhere — nothing happens. There’s no state, no interactivity, no memory of anything the user has done.</p>
+<p>To fix that we need to give <code>HelloWorld</code> some data, and we need to learn how GPUI thinks about ownership. That’s Chapter 2 — and it’s where Rust starts to feel less like a foreign language and more like a better version of something you already know.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-2-add-state"><a class="header" href="#chapter-2-add-state">Chapter 2: Add State</a></h1>
+<p>Our app from Chapter 1 looks real but remembers nothing. Click anywhere — nothing happens. To fix that we need to give <code>HelloWorld</code> some data and learn how GPUI thinks about ownership.</p>
+<p>Let’s build a click counter. It’s the simplest possible stateful UI, and it introduces every pattern you’ll use in every GPUI application you write.</p>
+<hr>
+<p><strong>The Data</strong></p>
+<p>Start by adding a field to the struct:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct HelloWorld {
+    counter: usize,
+}
+<span class="boring">}</span></code></pre>
+<p>Simple enough. But the moment we try to mutate this field inside a running UI, we run into something worth understanding — because how GPUI solves it is the foundation of everything else in this book.</p>
+<p>Think of your app’s UI as a family tree of screens, panels, buttons, and text. Each piece potentially reacts to the same underlying data. A button label might change from “Start” to “Stop”. A click handler might update a counter that three other components are displaying. A panel might appear or disappear based on state that something else just changed.</p>
+<p>Rust wants to know exactly who is allowed to change what, and only one part of the program may mutate a piece of data at a time. A UI, on the other hand, naturally wants several parts of the code to look at and react to the same thing. That tension — Rust’s strict ownership rules meeting a widget tree’s overlapping interests in shared state — is why GUI programming in Rust has a reputation for friction. Not because Rust is wrong. But because the obvious way to write UI code is exactly the kind of thing Rust is designed to prevent.</p>
+<p>GPUI sidesteps this entirely by changing who owns the data.</p>
+<hr>
+<p><strong>Handing Ownership to the Runtime</strong></p>
+<p>In GPUI, the application runtime owns your state — not you. Instead of passing mutable references around your UI tree, you surrender your struct to the framework when the window opens, using <code>cx.new()</code>:</p>
+<pre class="playground"><code class="language-rust">fn main() {
+    App::new().run(|cx: &amp;mut App| {
+        cx.open_window(WindowOptions::default(), |_, cx| {
+            cx.new(|_cx| HelloWorld { counter: 0 })
+        });
+    });
+}</code></pre>
+<p><code>cx.new()</code> takes your data, places it in GPUI’s managed runtime, and hands you back an <code>Entity&lt;HelloWorld&gt;</code> — a strongly-typed handle to your state. The framework now owns the actual memory. It guarantees your state stays alive exactly as long as the UI needs it and cleans it up automatically when the window closes. No manual memory management, no lifetime annotations, no dangling pointers.</p>
+<p>Two things to hold onto here:</p>
+<ul>
+<li><strong><code>T</code></strong> — your raw struct, <code>HelloWorld</code>. Just plain data.</li>
+<li><strong><code>Entity&lt;T&gt;</code></strong> — the handle GPUI gives back. Your reference into the runtime.</li>
+</ul>
+<p>When a type implements <code>Render</code>, GPUI treats its entity as a view. The struct is both the data and the component — the state and the thing that knows how to draw itself.</p>
+<hr>
+<p><strong>Making It Interactive</strong></p>
+<p>Now update <code>Render</code> to draw a counter and a button. In GPUI there’s no built-in <code>&lt;Button&gt;</code> primitive — interactivity is just behavior layered onto the same <code>div()</code> you already know:</p>
+<pre class="playground"><code class="language-rust">use gpui::*;
+
+struct HelloWorld {
+    counter: usize,
+}
+
+impl Render for HelloWorld {
+    fn render(&amp;mut self, _window: &amp;mut Window, cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
+        div()
+            .flex()
+            .flex_col()
+            .size_full()
+            .justify_center()
+            .items_center()
+            .bg(rgb(0x1e1e1e))
+            .text_color(rgb(0xffffff))
+            .gap_4()
+            .child(
+                div()
+                    .text_xl()
+                    .child(format!("Click count: {}", self.counter))
+            )
+            .child(
+                div()
+                    .id("increment-button")
+                    .p_2()
+                    .px_4()
+                    .bg(rgb(0x3b82f6))
+                    .rounded_md()
+                    .cursor_pointer()
+                    .on_click(cx.listener(|this, _event, _window, cx| {
+                        this.counter += 1;
+                        cx.notify();
+                    }))
+                    .child("Increment")
+            )
+    }
+}
+
+fn main() {
+    App::new().run(|cx: &amp;mut App| {
+        cx.open_window(WindowOptions::default(), |_, cx| {
+            cx.new(|_| HelloWorld { counter: 0 })
+        });
+    });
+}</code></pre>
+<p>Run <code>cargo run</code>. Click the button. The counter increments instantly — native pixels, no virtual DOM diff, no garbage collector deciding this is a good moment to pause.</p>
+<p>Two small things before we move on:</p>
+<p><code>format!("Click count: {}", self.counter)</code> is Rust’s string interpolation. The <code>!</code> marks it as a macro rather than a regular function call — something you’ll see often in Rust. It works exactly like a template literal in JavaScript.</p>
+<p><code>cx.listener()</code> is worth a moment’s attention. When you write an event handler in GPUI, you need access to both your component’s data (<code>this</code>) and the framework context (<code>cx</code>) at the same time. <code>cx.listener()</code> is the bridge that wires them together safely — it produces a closure that GPUI knows how to call with both. You’ll write it often enough that it becomes automatic, but now you know what it’s doing.</p>
+<hr>
+<p><strong>Two Things Worth Understanding Now</strong></p>
+<p><strong>The Hitbox Rule</strong></p>
+<p>Notice <code>.id("increment-button")</code> on the button div. In GPUI a plain <code>div()</code> is invisible to the mouse by default — GPUI’s hit-testing skips it entirely. Assigning a unique <code>.id()</code> registers the element as a target for mouse events. Without it, clicks fall silently through to the background with no error, no warning, nothing. Any element that needs to respond to mouse interaction needs an id.</p>
+<p><strong>The Golden Rule</strong></p>
+<p>Inside the click handler, <code>this.counter += 1</code> mutates the data in memory. But changing data in memory does not update the screen. You must call <code>cx.notify()</code> explicitly.</p>
+<p>If you’re coming from React, this is your <code>setState</code>. It tells GPUI: the data has changed, mark this entity dirty, schedule a re-render for the next frame. This explicit step is what lets GPUI safely coordinate updates across the entire UI tree without watching every variable in your application. Forget it once and your UI will silently show stale values — which will happen exactly once before it becomes muscle memory.</p>
+<hr>
+<p><strong>What’s Next</strong></p>
+<p>You built a stateful, interactive, native desktop app without writing a single lifetime annotation, without fighting the borrow checker, without thinking about memory at all. GPUI handled it.</p>
+<p>But how? How does the runtime safely let a click handler, a render pass, and an async task all interact with your data without the compiler objecting?</p>
+<p>That’s the question Chapter 3 answers. You’ve earned it.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-3-the-borrow-checker-you-never-fight"><a class="header" href="#chapter-3-the-borrow-checker-you-never-fight">Chapter 3: The Borrow Checker You Never Fight</a></h1>
+<p>In Chapter 2 you built a working stateful app without writing a single lifetime annotation, without wrapping anything in <code>Arc&lt;Mutex&lt;T&gt;&gt;</code>, without the compiler objecting once. If you’re coming from C++ or TypeScript that probably felt either suspiciously easy or genuinely surprising.</p>
+<p>This chapter explains why it worked. Not because the theory is required reading before you can continue — you can keep building without it — but because understanding the engine makes you a better driver. When something does go wrong, you’ll know exactly where to look.</p>
+<hr>
+<p><strong>What the Runtime Owns</strong></p>
+<p>When you called <code>cx.new(|_| HelloWorld { counter: 0 })</code> in Chapter 2, something important happened: you gave up ownership of your data. Not to another part of your code — to GPUI’s runtime itself.</p>
+<p>In exchange, GPUI handed you back an <code>Entity&lt;HelloWorld&gt;</code>. This handle is your reference into the runtime. The actual memory lives inside the framework, not in your call stack, not in a struct field you manage manually.</p>
+<p>This matters for two reasons.</p>
+<p>First, lifecycle management becomes automatic. Entities are never manually freed. When all handles to an entity drop out of scope — when the window closes, when the view is removed — GPUI cleans up the memory. No destructor to write, no free to call, no use-after-free to debug.</p>
+<p>Second, GPUI can now coordinate mutations safely. Because the runtime controls access to your data, it can ensure that a click handler and a render pass never hold conflicting references to the same state at the same time. This is the problem that makes UI code awkward in standard Rust — the widget tree’s natural desire for overlapping access to shared state runs directly against Rust’s ownership rules. GPUI resolves it by owning the data itself and mediating all access through the context object <code>cx</code>.</p>
+<p>This is also why <code>cx.notify()</code> exists. Mutating data through <code>cx</code> is the framework’s signal that a change happened. Calling <code>cx.notify()</code> afterward says: the data has changed, schedule a re-render. The runtime batches these safely across the entire UI tree.</p>
+<hr>
+<p><strong>Async Without Fear</strong></p>
+<p>The real payoff of this model becomes clear the moment you need to do something asynchronous.</p>
+<p>Imagine a button that loads a large file. You spawn a background task. The file is slow — network drive, large log, doesn’t matter. While it’s loading, the user closes the window.</p>
+<p>In a naive implementation, the background task finishes, tries to update a UI component that no longer exists, and crashes. In standard Rust you’d reach for <code>Arc&lt;Mutex&lt;T&gt;&gt;</code> and hope you got the locking right. In GPUI, the solution is <code>WeakEntity</code>.</p>
+<p>Before spawning an async task, you downgrade your entity to a weak reference:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let weak = entity.downgrade();
+
+cx.spawn(|mut cx| async move {
+    // Heavy work happens here, off the main thread
+    let content = load_large_file().await;
+
+    // Attempt to update the UI when done
+    let result = weak.update(&amp;mut cx, |this, cx| {
+        this.content = content;
+        cx.notify();
+    });
+
+    // If the window closed while we were working, result is Err.
+    // No crash. No panic. Just a graceful exit.
+    if result.is_err() {
+        // The view was dropped before we finished. Nothing to do.
+    }
+}).detach();
+<span class="boring">}</span></code></pre>
+<p>A <code>WeakEntity</code> doesn’t keep the entity alive. If the user closes the window and all strong handles drop, the entity is cleaned up — and when your background task calls <code>update()</code>, it gets back an <code>Err</code> instead of a panic. You handle it or ignore it. Either way, nothing crashes.</p>
+<p>This pattern — downgrade before spawning, check the result after — is the standard GPUI approach to all async work. Write it a few times and it becomes automatic.</p>
+<hr>
+<p><strong>RAII: The Patterns That Keep Things Running</strong></p>
+<p>GPUI uses Rust’s RAII model — Resource Acquisition Is Initialization — for two things that are easy to get wrong silently.</p>
+<p><strong>Tasks</strong></p>
+<p>When you spawn an async task with <code>cx.spawn()</code>, it returns a <code>Task&lt;T&gt;</code>. If you drop that value without calling <code>.detach()</code>, the task is immediately cancelled. Not eventually — immediately, cooperatively, on the next yield point.</p>
+<p>This is a feature, not a bug. It means you can cancel an in-flight network request simply by dropping the task handle. It means reassigning a new task to a struct field automatically cancels the previous one. No explicit cancellation logic, no tracking running operations manually.</p>
+<p>But it also means: if you want a task to keep running, you must store it. A fire-and-forget task that you don’t store will silently never complete.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct MyView {
+    // Store the task here, or it gets cancelled immediately
+    _load_task: Option&lt;Task&lt;()&gt;&gt;,
+}
+<span class="boring">}</span></code></pre>
+<p><strong>Subscriptions</strong></p>
+<p>The same pattern applies to event subscriptions. When you subscribe to an event stream with <code>cx.subscribe()</code>, you get back a subscription handle. Drop it and the subscription is immediately unregistered — your handler stops being called.</p>
+<p>Store the handle in your struct if you want the subscription to live as long as the view. This is RAII working exactly as intended: the subscription’s lifetime is tied to the handle’s lifetime, and the handle’s lifetime is tied to wherever you put it.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct MyView {
+    _subscription: Option&lt;Subscription&gt;,
+}
+<span class="boring">}</span></code></pre>
+<p>Both of these follow the same mental model: in GPUI, if you own the handle, you own the lifetime.</p>
+<hr>
+<p><strong>The Mental Shift</strong></p>
+<p>You don’t fight the borrow checker in GPUI because you’re not trying to manage memory yourself. The runtime owns the data. You hold handles. You request access through <code>cx</code>. You notify when things change.</p>
+<p>Once that shift clicks, the rest of GPUI’s API starts to feel inevitable rather than arbitrary. The context object isn’t boilerplate — it’s the runtime’s interface. The <code>Entity</code> isn’t an indirection — it’s a guarantee.</p>
+<p>Part II builds on this foundation. Now that you understand the engine, we can look at how GPUI actually turns your <code>Render</code> implementations into pixels — and what happens when the built-in primitives aren’t enough.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-4-layout-and-style"><a class="header" href="#chapter-4-layout-and-style">Chapter 4: Layout and Style</a></h1>
+<p>In the first part of this book, you built a working, stateful application. You learned how to pass data to GPUI and let the runtime borrow checker keep it safe. But so far, our UI has been brutally simple.</p>
+<p>Now it is time to make it look like a professional desktop application.</p>
+<p>If you are coming from web development, you might be looking around for the CSS files or a stylesheet engine. You won’t find one. GPUI completely eliminates the split between markup and styling. Instead, styling is applied directly via a fluent Rust API that maps perfectly to the mental model of Tailwind CSS.</p>
+<h2 id="the-styled-trait-and-the-fluent-api"><a class="header" href="#the-styled-trait-and-the-fluent-api">The <code>Styled</code> Trait and the Fluent API</a></h2>
+<p>In GPUI, every base element (like <code>div()</code>, <code>button()</code>, and <code>text()</code>) implements a trait called <code>Styled</code>. Because these elements implement this trait, procedural macros inside the framework generate hundreds of chainable styling methods for them.</p>
+<p>When you write <code>.w_full()</code>, <code>.p_4()</code>, or <code>.bg()</code>, you are calling these generated methods directly on the element.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>div()
+    .flex()
+    .w_full()    // width: 100%
+    .h_12()      // height: 3rem (48px)
+    .p_4()       // padding: 1rem (16px)
+    .bg(rgb(0x1e1e1e))
+<span class="boring">}</span></code></pre>
+<p>Because this is pure Rust, there are no string typos or missing CSS classes. If you type <code>.w_fll()</code> instead of <code>.w_full()</code>, your application simply won’t compile.</p>
+<h4 id="flexbox-and-spacing"><a class="header" href="#flexbox-and-spacing">Flexbox and Spacing</a></h4>
+<p>GPUI’s layout engine uses Flexbox. There is no CSS Grid, no floats, and no table layouts. Flexbox is the single layout primitive you must master.</p>
+<p>To turn any <code>div()</code> into a flex container, you simply call <code>.flex()</code>. From there, you control the layout exactly as you would in the web world:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>div()
+    .flex()
+    .flex_col()           // Flex direction: column
+    .justify_between()    // Space elements apart
+    .items_center()       // Center elements along the cross-axis
+    .gap_4()              // Apply a 16px gap between children
+<span class="boring">}</span></code></pre>
+<p>For exact pixel measurements, GPUI provides the <code>px()</code> helper. You can use this for specific gaps (<code>.gap(px(10.0))</code>) or custom sizing when the predefined Tailwind-like steps don’t fit your needs.</p>
+<h4 id="colors-typography-and-borders"><a class="header" href="#colors-typography-and-borders">Colors, Typography, and Borders</a></h4>
+<p>You apply colors using the <code>rgb()</code> or <code>rgba()</code> macros. These can be chained for backgrounds, text, and borders:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>div()
+    .bg(rgb(0x2d3748))
+    .text_color(rgb(0xffffff))
+    .border_1()           // 1px border
+    .border_color(rgb(0x4a5568))
+    .rounded_md()         // Medium border radius
+    .shadow_sm()          // Small drop shadow
+<span class="boring">}</span></code></pre>
+<p><em>Note on Text:</em> While GPUI supports rich text formatting, the basic <code>.text_color()</code> and size APIs applied to a <code>div()</code> will cascade to the plain text children inside it. However, GPUI lacks some of the hyper-granular text styling found in CSS, such as arbitrary <code>.line_height()</code>.</p>
+<h4 id="conditional-styling-with-when"><a class="header" href="#conditional-styling-with-when">Conditional Styling with <code>when()</code></a></h4>
+<p>One of the biggest friction points in standard React/Tailwind development is dynamically changing classes based on state (e.g., <code>className={isActive ? "bg-blue-500" : "bg-gray-500"}</code>).</p>
+<p>GPUI solves this elegantly with the <code>.when()</code> method. It allows you to conditionally apply styles without breaking your fluent builder chain:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>div()
+    .flex()
+    .p_2()
+    .rounded_md()
+    // If self.is_active is true, apply the blue background.
+    // Otherwise, do nothing.
+    .when(self.is_active, |this| this.bg(rgb(0x3b82f6)))
+    // You can also use it for conditional text colors or borders
+    .when(!self.is_active, |this| this.text_color(rgb(0xa0aec0)))
+    .child("Dashboard")
+<span class="boring">}</span></code></pre>
+<h4 id="absolute-positioning-and-overlays"><a class="header" href="#absolute-positioning-and-overlays">Absolute Positioning and Overlays</a></h4>
+<p>Flexbox handles most of your application’s structure, but some things need to step outside the normal flow entirely. Notification badges, tooltips, dropdown menus — these sit on top of other content rather than alongside it.</p>
+<p>GPUI provides <code>.absolute()</code>, paired with <code>.top()</code>, <code>.bottom()</code>, <code>.left()</code>, and <code>.right()</code>. An absolute element is positioned relative to its closest ancestor marked <code>.relative()</code>, exactly as in CSS:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>div()
+    .relative()          // Establishes the positioning boundary
+    .p_2()
+    .bg(rgb(0x3b82f6))
+    .rounded_md()
+    .child("Inbox")
+    .child(
+        div()
+            .absolute()          // Pulls the badge out of the flex flow
+            .top(px(-4.0))
+            .right(px(-4.0))
+            .w_3()
+            .h_3()
+            .bg(rgb(0xef4444))
+            .rounded_full()
+    )
+<span class="boring">}</span></code></pre>
+<h4 id="paint-order-instead-of-z-index"><a class="header" href="#paint-order-instead-of-z-index">Paint Order Instead of Z-Index</a></h4>
+<p>When you start using <code>.absolute()</code>, you’ll instinctively reach for <code>.z_index()</code> to control which element sits on top. There isn’t one.</p>
+<p>GPUI renders directly to the GPU and deliberately avoids the performance cost of calculating CSS stacking contexts. Instead, elements are painted in exactly the order they appear in your code. If you need a badge to overlap the content below it, declare it after that content. The last child paints on top.</p>
+<p>For overlays that need to break out of their parent’s clipping bounds entirely — a command palette, a context menu — GPUI provides a <code>deferred()</code> rendering system. That’s Chapter 8.</p>
+<h4 id="what-gpui-does-not-have-the-constraints"><a class="header" href="#what-gpui-does-not-have-the-constraints">What GPUI Does NOT Have (The Constraints)</a></h4>
+<p>Because GPUI renders everything natively to the GPU for maximum performance, it does not implement the entire CSS specification. To avoid frustration, you must understand what is deliberately missing:</p>
+<ol>
+<li><strong>No Z-Index:</strong> There is no <code>.z_index()</code> method. Elements are drawn in the exact order they appear in the tree. To put a popup over a text box, you either render it later in the child list or use absolute positioning with GPUI’s <code>.deferred()</code> rendering system (which we will cover in Chapter 8).</li>
+<li><strong>No Animations or Transforms:</strong> GPUI has no <code>.transition()</code>, <code>.animation()</code>, <code>.rotate()</code>, or <code>.scale()</code> methods. If you want something to move or fade, you must manually drive the animation state using a timer, which we will cover in Chapter 7.</li>
+<li><strong>Limited Overflow:</strong> There is no <code>.overflow_scroll()</code>, <code>.overflow_auto()</code>, or <code>.overflow_visible()</code>. GPUI only supports <code>.overflow_hidden()</code> to clip children to the parent’s bounds.</li>
+<li><strong>No Gradients or Filters:</strong> There are no built-in linear gradients, radial gradients, or backdrop blur filters.</li>
+</ol>
+<h4 id="the-next-step"><a class="header" href="#the-next-step">The Next Step</a></h4>
+<p>By combining <code>div()</code>, Flexbox, and <code>.when()</code>, you can build 95% of a professional application interface. But what about the other 5%? What happens when you need to draw a custom shape, a complex chart, or something GPUI simply doesn’t have a built-in method for?</p>
+<p>In Chapter 5, we are going to step off the “fluent styling” path and drop down to the foundational <code>Element</code> trait, showing you how to draw your own custom primitives directly to the screen.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-5-custom-elements-1"><a href="#chapter-5-custom-elements-1" class="header">Chapter 5: Custom Elements</a></h1>
+<h2 id="chapter-5-custom-elements"><a class="header" href="#chapter-5-custom-elements">Chapter 5: Custom Elements</a></h2>
+<p>The fluent API from Chapter 4 will take you a long way. Most application interfaces — navigation bars, settings panels, content lists — can be built entirely from composed <code>div()</code> elements with Flexbox and conditional styling.</p>
+<p>Some things genuinely can’t. A data visualization, a custom code minimap, a waveform display, a specialized input control with non-rectangular hit areas — these require drawing primitives the framework doesn’t provide. In GPUI this isn’t a dead end. Because the renderer is native, you can step below the fluent API and push drawing commands directly to the GPU.</p>
+<hr>
+<p><strong><code>Render</code> vs <code>Element</code></strong></p>
+<p>Two traits govern how GPUI turns your code into pixels.</p>
+<p><code>Render</code> is the high-level view contract you’ve been using since Chapter 1. It returns a blueprint composed of existing pieces — anything that implements <code>IntoElement</code>. GPUI resolves that blueprint into a tree and handles the rest.</p>
+<p><code>Element</code> is the low-level primitive. When you implement <code>Element</code>, you stop composing existing blocks and start defining three things directly: how much space your element needs, where it receives mouse input, and exactly what gets drawn to the screen.</p>
+<p>Every built-in primitive — every <code>div()</code>, every <code>.bg()</code>, every <code>.rounded_md()</code> — is implemented using this same <code>Element</code> trait underneath. You’re not accessing a back door. You’re using the same interface the framework uses for itself.</p>
+<hr>
+<p><strong>The Three-Phase Lifecycle</strong></p>
+<p>GPUI evaluates every element in three phases: Layout, Prepaint, and Paint.</p>
+<p>The best way to understand them is to build something real. Here’s a complete custom <code>ProgressBar</code> — a fixed-height fill that renders a background track and an active fill proportional to a progress value:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use gpui::*;
+
+pub struct ProgressBar {
+    progress: f32, // 0.0 to 1.0
+}
+
+pub fn progress_bar(progress: f32) -&gt; ProgressBar {
+    ProgressBar { progress }
+}
+
+impl IntoElement for ProgressBar {
+    type Element = Self;
+    fn into_element(self) -&gt; Self::Element { self }
+}
+
+impl Element for ProgressBar {
+    type RequestLayoutState = ();
+    type PrepaintState = ();
+
+    fn request_layout(
+        &amp;mut self,
+        _id: Option&lt;&amp;GlobalElementId&gt;,
+        cx: &amp;mut WindowContext,
+    ) -&gt; (LayoutId, Self::RequestLayoutState) {
+        let mut style = Style::default();
+        style.size.width = relative(1.0).into();
+        style.size.height = px(8.0).into();
+        let layout_id = cx.request_layout(style, None);
+        (layout_id, ())
+    }
+
+    fn prepaint(
+        &amp;mut self,
+        _id: Option&lt;&amp;GlobalElementId&gt;,
+        bounds: Bounds&lt;Pixels&gt;,
+        _layout: &amp;mut Self::RequestLayoutState,
+        cx: &amp;mut WindowContext,
+    ) -&gt; Self::PrepaintState {
+        ()
+    }
+
+    fn paint(
+        &amp;mut self,
+        _id: Option&lt;&amp;GlobalElementId&gt;,
+        bounds: Bounds&lt;Pixels&gt;,
+        _layout: &amp;mut Self::RequestLayoutState,
+        _prepaint: &amp;mut Self::PrepaintState,
+        cx: &amp;mut WindowContext,
+    ) {
+        cx.paint_quad(fill(bounds, rgb(0x374151)));
+
+        let mut fill_bounds = bounds;
+        fill_bounds.size.width *= self.progress;
+        cx.paint_quad(fill(fill_bounds, rgb(0x3b82f6)));
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>You can now drop <code>progress_bar(0.75)</code> into any <code>Render</code> method exactly like a <code>div()</code>. GPUI treats it identically to its own built-in primitives.</p>
+<hr>
+<p><strong>What Each Phase Does</strong></p>
+<p><strong>Layout</strong> — <code>request_layout</code> runs first. You define how much space your element needs by constructing a <code>Style</code> and returning a <code>LayoutId</code>. The flexbox engine uses this to position everything around you. Our progress bar requests full width and a fixed 8px height.</p>
+<p><strong>Prepaint</strong> — Once your position and size are resolved, <code>prepaint</code> runs. This is where you register hitboxes — the regions that receive mouse events. Our progress bar is display-only, so prepaint does nothing. If this were a custom slider, you would push an opaque hitbox here matching the element’s bounds, so GPUI’s event router knows to deliver mouse clicks and drags to this element. Without a registered hitbox, the router treats the element as invisible to the mouse regardless of what gets painted.</p>
+<p>This is the mechanic behind the Hitbox Rule from Chapter 2. A <code>div()</code> without <code>.id()</code> skips hitbox registration entirely. Now you can see exactly why clicks fall through.</p>
+<p><strong>Paint</strong> — Finally, you push drawing commands to the GPU. <code>cx.paint_quad()</code> draws a filled rectangle. We draw the track first, then calculate the fill width by multiplying the full bounds width by the progress value, and draw the fill on top. Paint order is depth order — later calls paint over earlier ones.</p>
+<hr>
+<p><strong>A Note on Animations</strong></p>
+<p>GPUI has no <code>.transition()</code> or <code>.animate()</code> modifier. If you want a progress bar to fill smoothly rather than jump, you drive the animation yourself — incrementing the progress value on a timer and calling <code>cx.notify()</code> each frame. Chapter 7 covers exactly this using the async <code>Timer</code> system.</p>
+<hr>
+<p><strong>What’s Next</strong></p>
+<p>You can now draw anything. The next question is how users interact with what you’ve built — specifically, how GPUI thinks about the difference between a mouse click and a keyboard shortcut, and why that distinction matters more than it might seem.</p>
+<p>Chapter 6: Focus and Actions.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-6-focus-and-actions-1"><a href="#chapter-6-focus-and-actions-1" class="header">Chapter 6: Focus and Actions</a></h1>
+<h2 id="chapter-6-focus-and-actions"><a class="header" href="#chapter-6-focus-and-actions">Chapter 6: Focus and Actions</a></h2>
+<p>You can now draw anything to the screen. The next question is how your application responds to the keyboard — and this is where GPUI introduces a distinction that feels unfamiliar at first but turns out to be one of its best ideas.</p>
+<p>In GPUI, mouse events and keyboard events are handled through entirely different systems, and deliberately so.</p>
+<hr>
+<p><strong>The Semantic Divide</strong></p>
+<p>Mouse events are positional. When you click, GPUI finds the hitbox registered during prepaint and triggers the corresponding <code>.on_click()</code> handler. The location of the cursor determines everything.</p>
+<p>Keyboard events are contextual. When a user presses <code>Cmd+S</code>, the cursor position is irrelevant. What matters is which part of the application currently has the user’s attention. Is the user working in a text editor? Save the file. Are they in a settings panel? Save the preferences. The same keypress, two completely different meanings depending on context.</p>
+<p>GPUI models this context through a focus system and a routing layer called Actions. Together they replace the pattern of attaching <code>onKeyDown</code> listeners to elements and checking which mode the app is currently in.</p>
+<hr>
+<p><strong>Focus Management</strong></p>
+<p>To receive keyboard-driven input, an element must be part of the focus tree. GPUI manages this with <code>FocusHandle</code> — a token representing a specific element’s position in that tree.</p>
+<p>You create focus handles through the context and attach them to elements with <code>.track_focus()</code>:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use gpui::*;
+
+struct SplitPane {
+    left_focus: FocusHandle,
+    right_focus: FocusHandle,
+}
+
+impl SplitPane {
+    fn new(cx: &amp;mut Context&lt;Self&gt;) -&gt; Self {
+        Self {
+            left_focus: cx.focus_handle(),
+            right_focus: cx.focus_handle(),
+        }
+    }
+}
+
+impl Render for SplitPane {
+    fn render(&amp;mut self, _window: &amp;mut Window, cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
+        div()
+            .flex()
+            .size_full()
+            .child(
+                div()
+                    .track_focus(&amp;self.left_focus)
+                    .on_focus(cx.listener(|_, _, _, cx| println!("Left pane focused")))
+                    .w_1_2()
+                    .bg(rgb(0x1e1e1e))
+            )
+            .child(
+                div()
+                    .track_focus(&amp;self.right_focus)
+                    .w_1_2()
+                    .bg(rgb(0x2d3748))
+            )
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>.track_focus()</code> registers the element with GPUI’s focus tree. To move focus programmatically — after a task completes, after a modal closes — call <code>self.right_focus.focus(window)</code>. The rest of the routing system follows automatically.</p>
+<hr>
+<p><strong>The Action System</strong></p>
+<p>With focus established, the question is how keypresses get connected to behavior. GPUI’s answer is Actions — pure semantic descriptions of intent defined with the <code>actions!</code> macro:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>actions!(workspace, [SaveFile, ClosePanel]);
+<span class="boring">}</span></code></pre>
+<p>These structs carry no logic. <code>SaveFile</code> just means “the user intends to save.” What saving actually does depends on which element catches the action and what context it’s in.</p>
+<p>Keystrokes are mapped to actions in a keymap configuration separate from your application code. <code>Cmd+S</code> maps to <code>workspace::SaveFile</code>. If a user wants to remap it, they change the keymap — nothing in your Rust code changes. The action name is the stable contract between input and behavior.</p>
+<hr>
+<p><strong>Action Routing: The Bubble</strong></p>
+<p>When the user presses a mapped keystroke, GPUI creates the corresponding action struct and injects it at whichever element currently holds focus. From there it bubbles up the element tree. Every element in the path has a chance to catch it with <code>.on_action()</code>:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>div()
+    .track_focus(&amp;self.left_focus)
+    .on_action(cx.listener(|this, _action: &amp;SaveFile, _window, cx| {
+        // Only reached if this pane or one of its children has focus
+        this.save(cx);
+        cx.notify();
+    }))
+<span class="boring">}</span></code></pre>
+<p>If no element in the active focus path handles the action, it drops silently at the root.</p>
+<p>This silent drop is a feature. Consider a <code>Delete</code> action mapped to <code>Backspace</code>. When the user is typing in a text input, the input catches <code>Delete</code>, removes a character, and stops the bubble. When the user clicks into a file explorer and presses <code>Backspace</code>, the text input is no longer in the focus path — it never sees the action. The file explorer catches it instead and moves a file to trash.</p>
+<p>No global mode tracking. No <code>if currentFocus === 'editor'</code> conditionals. The structure of the focus tree is the routing logic.</p>
+<hr>
+<p><strong>What’s Next</strong></p>
+<p>You can draw anything and route user intent precisely where it belongs. The remaining question is time — what happens when handling an action triggers work that takes a while? Saving to a slow disk, fetching from a network, parsing a large file. Doing that work inside an action handler will freeze the UI.</p>
+<p>Chapter 7 covers GPUI’s async engine: how to move heavy work off the UI thread, how to get results back safely, and how the <code>WeakEntity</code> pattern from Chapter 3 becomes essential in practice.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-7-async-and-memory-lifetimes-1"><a href="#chapter-7-async-and-memory-lifetimes-1" class="header">Chapter 7: Async and Memory Lifetimes</a></h1>
+<h2 id="chapter-7-async-and-memory-lifetimes"><a class="header" href="#chapter-7-async-and-memory-lifetimes">Chapter 7: Async and Memory Lifetimes</a></h2>
+<p>Routing a <code>SaveFile</code> action through the focus tree is clean and fast. But saving a file — actually writing bytes to disk, or fetching data over a network — can take time. Do that work directly inside an <code>.on_action()</code> handler and the UI thread stalls. The window freezes, the OS considers the app unresponsive, and the user reaches for force quit.</p>
+<p>GPUI’s async engine is how you keep the interface running while real work happens in the background.</p>
+<hr>
+<p><strong>Foreground vs Background Tasks</strong></p>
+<p>GPUI provides two spawning contexts:</p>
+<p><code>cx.spawn()</code> runs on the main UI thread. It’s right for lightweight async control flow — waiting on a timer, chaining short UI updates, sequencing operations that touch view state. It won’t block rendering between yield points, but heavy synchronous work inside it will still stall the thread.</p>
+<p><code>cx.background_spawn()</code> moves execution onto GPUI’s background thread pool, completely off the UI thread. Disk reads, network requests, large file parsing — anything that takes real time belongs here.</p>
+<p>Because background tasks run on a separate thread, they have no direct access to your UI state. To get results back safely, you need the <code>WeakEntity</code> pattern.</p>
+<hr>
+<p><strong>The <code>WeakEntity</code> Pattern in Practice</strong></p>
+<p>Chapter 3 introduced <code>WeakEntity</code> as theory. Here it becomes a daily pattern.</p>
+<p>Before leaving the UI thread, downgrade your entity to a weak reference. When the background work finishes, use that reference to jump back and update state:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let weak_state = entity.downgrade();
+
+cx.background_spawn(async move {
+    // Runs on the background thread pool.
+    // The UI keeps rendering while this executes.
+    let content = std::fs::read_to_string("large_file.txt")
+        .unwrap_or_default();
+
+    // Jump back to the UI thread to apply the result.
+    let result = weak_state.update(&amp;mut cx, |this, cx| {
+        this.content = content;
+        cx.notify();
+    });
+
+    if result.is_err() {
+        // The window closed while we were loading. Nothing to do.
+    }
+}).detach();
+<span class="boring">}</span></code></pre>
+<p><code>update()</code> returns a <code>Result</code>. If the user closes the window while the file is loading, the entity is dropped, and <code>update()</code> returns <code>Err</code> instead of panicking. Your background task exits cleanly. No crash, no undefined behavior, no complex cancellation logic.</p>
+<hr>
+<p><strong>RAII: Lifetimes You Control</strong></p>
+<p>GPUI uses Rust’s RAII model to manage two things that are easy to get wrong silently.</p>
+<p><strong>Tasks</strong></p>
+<p><code>cx.spawn()</code> and <code>cx.background_spawn()</code> both return a <code>Task&lt;T&gt;</code>. If you drop that value without calling <code>.detach()</code>, the task is immediately cancelled — cooperatively, on its next yield point. Not eventually. Immediately.</p>
+<p>This is deliberate. It means you can cancel an in-flight operation simply by dropping its task handle. More usefully, it means storing a task in your struct and reassigning it automatically cancels the previous one:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct SearchView {
+    search_task: Option&lt;Task&lt;()&gt;&gt;,
+}
+<span class="boring">}</span></code></pre>
+<p>Every new keystroke in a search input can replace <code>search_task</code> with a new task, cancelling the previous network request automatically. No explicit cancellation API, no tracking in-flight operations manually. The lifetime of the task is the lifetime of the handle.</p>
+<p>If you want a task to keep running — a background sync, an animation loop — you must store it. A task you don’t store will silently never complete.</p>
+<p><strong>Subscriptions</strong></p>
+<p>Event subscriptions from <code>cx.subscribe()</code> follow the same pattern. The subscription handle keeps the listener alive. Drop the handle and the listener is immediately unregistered. If your event handlers stop firing unexpectedly, the first thing to check is whether the subscription handle is still in scope.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct MyView {
+    _subscription: Option&lt;Subscription&gt;,
+}
+<span class="boring">}</span></code></pre>
+<p>Both patterns share the same mental model: in GPUI, if you own the handle, you own the lifetime.</p>
+<hr>
+<p><strong>Manual Animations</strong></p>
+<p>GPUI has no <code>.transition()</code> or <code>.animate()</code> modifier. Animations are driven explicitly — update state on a timer, call <code>cx.notify()</code>, let the renderer do its job.</p>
+<p>Here’s a 60-frame animation that fills a progress bar over one second:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let weak_state = entity.downgrade();
+
+// Store this in your struct — dropping it cancels the animation
+self.animation_task = Some(cx.spawn(|mut cx| async move {
+    for frame in 0..60 {
+        Timer::after(Duration::from_millis(16)).await;
+
+        let _ = weak_state.update(&amp;mut cx, |this, cx| {
+            this.progress = frame as f32 / 60.0;
+            cx.notify();
+        });
+    }
+}));
+<span class="boring">}</span></code></pre>
+<p>The same <code>WeakEntity</code> pattern applies. If the view is removed mid-animation, <code>update()</code> returns <code>Err</code> and the loop exits. No dangling references, no orphaned timers.</p>
+<hr>
+<p><strong>What’s Next</strong></p>
+<p>You now have the full foundational toolkit: layouts, custom drawing, keyboard routing, and async work without memory hazards.</p>
+<p>Part II is complete. Part III steps back from the framework itself and looks at the broader ecosystem — what the community has built on top of GPUI, what you can borrow, and what you’ll likely need to build yourself.</p>
+<p>We start with the application that stress-tests everything: Zed.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-8-the-upstream-reality-1"><a href="#chapter-8-the-upstream-reality-1" class="header">Chapter 8: The Upstream Reality</a></h1>
+<h2 id="chapter-8-the-upstream-reality"><a class="header" href="#chapter-8-the-upstream-reality">Chapter 8: The Upstream Reality</a></h2>
+<p>By now GPUI feels productive. Things compile. The entity model clicks. The async patterns make sense. This chapter steps back from the framework itself and answers a question worth asking before you build anything serious: what kind of tool is this, and what are you actually betting on?</p>
+<p>Not to scare you off. To give you a map.</p>
+<hr>
+<p><strong>Where GPUI Came From</strong></p>
+<p>GPUI was not designed as a general-purpose UI framework. It was extracted from Zed, the high-performance code editor, and that origin explains almost everything about its design.</p>
+<p>The history matters in brief. Zed’s earliest prototype was an Electron app with a Rust backend passing JSON messages back and forth. The first version of GPUI was essentially a layer to feed data to that Electron shell. Over several iterations — a Pathfinder renderer, a Flutter-inspired constraint system, a split between Rust code and JSON themes — the team kept finding UI development painful. The framework was accumulating complexity without gaining clarity.</p>
+<p>In late 2023, the Zed team made a clean break. They froze the old framework, built GPUI 2 in parallel over roughly four months, and shipped it as the foundation for Zed’s collaboration features. Only after it stabilized did they open source it.</p>
+<p>That sequencing is significant. GPUI was opened after it solved Zed’s problems, not before. It is not a community-first framework that happens to power an editor. It is an editor framework that happens to be open.</p>
+<hr>
+<p><strong>The Editor-First Constraint</strong></p>
+<p>Zed is a business. The team’s primary responsibility is improving the editor. Features that benefit Zed get prioritized. Features that don’t will wait — or never arrive. This is not hostility toward the community. It’s focus.</p>
+<p>The practical consequence: if you’re building something that looks like Zed — a code editor, an IDE, a terminal, a data tool, a dashboard — you’re aligned with upstream’s priorities. The framework was designed for exactly your use case. If you’re building a creative tool with custom shaders, a 3D application, or something with heavy animations and visual effects, you’re working against the grain. GPUI will not grow in your direction quickly, if at all.</p>
+<p>The practical rule: build with upstream GPUI until you hit a hard wall. Then decide whether to work around the gap, use a community fork, or choose a different framework. Don’t make that decision in advance — the gaps are fewer than they appear from the outside.</p>
+<hr>
+<p><strong>What GPUI Does Well</strong></p>
+<p>You’ve already used most of this. Here it is gathered in one place:</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Area</th><th>Status</th></tr>
+</thead>
+<tbody>
+<tr><td>Layout</td><td>Production-ready. Flexbox, full style API, absolute positioning.</td></tr>
+<tr><td>Text</td><td>Rope buffers, UTF-8 alignment, IME wiring.</td></tr>
+<tr><td>Async</td><td><code>cx.spawn()</code>, RAII cancellation, <code>WeakEntity</code>. Solid.</td></tr>
+<tr><td>State</td><td>Entity model, <code>cx.notify()</code>, subscriptions.</td></tr>
+<tr><td>Performance</td><td>GPU-accelerated, 120fps capable, no layout thrashing.</td></tr>
+<tr><td>Focus and Actions</td><td>Keyboard routing, bubble-and-handle, action system.</td></tr>
+<tr><td>Custom Elements</td><td><code>Element</code> trait, three-phase lifecycle, full GPU access.</td></tr>
+</tbody>
+</table>
+</div>
+<p>For roughly eighty percent of what a native desktop app needs — windows, lists, forms, async data loading, keyboard-driven interfaces — GPUI is production-ready today.</p>
+<hr>
+<p><strong>What GPUI Doesn’t Have</strong></p>
+<p>These gaps are confirmed by the framework’s GitHub issues and the community’s own analysis. They’re stated plainly here because you’re better off knowing them now than discovering them mid-project.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Gap</th><th>Workaround</th><th>When It Hurts</th></tr>
+</thead>
+<tbody>
+<tr><td>Custom shaders / GPU compute</td><td><code>raw_window_handle</code> + manual wgpu context</td><td>Games, data viz, video, creative tools</td></tr>
+<tr><td>Transforms on generic elements</td><td>Absolute positioning + nested views, or pre-render to image</td><td>Complex animations, drag gestures</td></tr>
+<tr><td>Radial / conic gradients</td><td>Pre-render to image, use as background</td><td>Decorative surfaces, animated gradients</td></tr>
+<tr><td>Headless testing</td><td>CLI harness pattern (Chapter 12) + snapshot testing</td><td>Visual regression, CI without GPU</td></tr>
+<tr><td>Rich text editing out of the box</td><td>Wire rope, selection, IME yourself (Chapter 11)</td><td>Serious text inputs</td></tr>
+</tbody>
+</table>
+</div>
+<p>The honest framing: these gaps exist. For some apps they’re dealbreakers. For most they’re inconveniences with straightforward workarounds. The question isn’t whether GPUI has a feature — it’s whether you can live without it or build around it.</p>
+<hr>
+<p><strong>The Fork Landscape in Brief</strong></p>
+<p>If a gap is a dealbreaker, you’re not stuck. The community has produced several active forks that fill specific holes. Chapter 9 covers each in depth. Here’s the decision tree to hold in your head now:</p>
+<pre><code>Is your app Zed-shaped (text, data, tooling)?
+├── Yes → Upstream GPUI
+│
+├── Need custom shaders or 3D? → Kael
+│
+├── Need wgpu backend + smooth scrolling? → WGPUI
+│
+└── Need stable versioned releases? → gpui-unofficial
+</code></pre>
+<p>Using a fork doesn’t mean abandoning upstream. Most forks rebase regularly on upstream GPUI, so you continue receiving fixes. The choice is about picking the branch that matches your constraints.</p>
+<hr>
+<p><strong>Three Questions Before You Commit</strong></p>
+<p><strong>Does your app’s core value rely on a missing feature?</strong>
+If you’re building a 3D model viewer or a video editor, GPUI is the wrong tool. If you’re building a CRUD app, a chat client, a dashboard, or an internal tool, you’re in good shape.</p>
+<p><strong>Can you live with the workarounds for the near term?</strong>
+The gaps are real but not growing. The community is slowly filling them through forks. If your timeline is short and your app is Zed-shaped, upstream is fine today.</p>
+<p><strong>Are you building for the long term?</strong>
+If yes, expect to either contribute upstream, maintain a small fork with the features you need, or migrate to whichever community fork consolidates. The pure core pattern from Chapter 12 makes migration possible without rewriting your business logic. Put your domain logic in a crate with no GPUI dependencies, and you can swap the UI layer later.</p>
+<hr>
+<p><strong>The Final Advice</strong></p>
+<p>Don’t bet on GPUI. Bet on your domain logic being pure Rust. GPUI is the delivery mechanism, not the product.</p>
+<p>That’s not pessimism — it’s good architectural hygiene regardless of which framework you choose. Build your business logic in a framework-agnostic crate, use GPUI to deliver it, and the specific state of the ecosystem matters less than it might seem.</p>
+<p>The next chapter maps the fork landscape in detail — what each fork solves, who’s building it, and how to choose between them.</p>
+<hr>
+<p><em>For a deeper dive into GPUI’s origins — the GPUI 1 to GPUI 2 rewrite, the frozen-crate strategy, and the open-source timing decision — see Appendix A.</em></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-9-the-fork-landscape-1"><a href="#chapter-9-the-fork-landscape-1" class="header">Chapter 9: The Fork Landscape</a></h1>
+<h2 id="chapter-9-the-fork-landscape"><a class="header" href="#chapter-9-the-fork-landscape">Chapter 9: The Fork Landscape</a></h2>
+<p>Chapter 8 gave you the honest truth about upstream GPUI: it’s editor-first, gaps exist, and the team prioritizes Zed’s needs over general UI features. So what do you do when you hit a wall — when you need custom shaders, or a unified renderer, or a component library that doesn’t require building everything from scratch?</p>
+<p>You have options. This chapter maps them.</p>
+<p>Why do forks exist at all? By early 2026, the Zed team made it clear that GPUI development would prioritize only features directly related to the editor’s use case, pushing off anything outside that scope. PRs for features like custom shaders have been rejected upstream, with the explanation that work not directly usable in Zed isn’t being merged.</p>
+<p>That’s the context. None of this is hostile — it’s focus. But focus creates gaps, and gaps create forks.</p>
+<p>Here are the major ones you should know about.</p>
+<hr>
+<p><strong>WGPUI</strong></p>
+<p>WGPUI solves a specific technical problem: GPUI’s platform-specific backends. Upstream GPUI uses Metal on macOS, Blade on Linux, and Direct3D on Windows. This works for Zed, but it means behavior can differ across platforms and adding new rendering features requires implementing them three times.</p>
+<p>WGPUI replaces all of that with a single wgpu backend plus winit for window management. The result is one cross-platform renderer, eliminating accidental platform divergence. Text rendering uses cosmic-text and font-kit. The fork has also added features requested by its community: controllable text gradients, blurred UI elements, blurred element content, and smooth scrolling support.</p>
+<p>Who uses WGPUI today? Several projects, including Futureboard¹ and the maintainers’ own applications. The primary value proposition is unified rendering — if you care deeply about cross-platform consistency and wgpu’s architecture, this is your fork.</p>
+<hr>
+<p><strong>gpui-ce — Community Edition</strong></p>
+<p>gpui-ce is the most direct response to upstream’s narrowing focus. It’s maintained by a former early Zed employee along with several community contributors. The goal is explicitly consolidation — keeping a version of GPUI that welcomes features Zed doesn’t need.</p>
+<p>The fork already has a custom shaders pull request in progress. The maintainers have stated their willingness to compromise on a lot in order to have a consolidated effort around GPUI, which they believe could be many times larger than it is now. People have stuck with GPUI through years of poor usability because they were compelled by its potential. With community maintenance, that potential might finally be realized.</p>
+<p>If you want a version of GPUI that tracks upstream but accepts features rejected by Zed, gpui-ce is the most direct path.</p>
+<hr>
+<p><strong>gpui-unofficial</strong></p>
+<p>This fork solves a different problem: versioning. Upstream GPUI doesn’t publish versioned releases on a predictable cadence. The crates are tied to Zed’s monorepo, which makes depending on GPUI from crates.io awkward.</p>
+<p>gpui-unofficial is the simplest solution: it publishes GPUI releases tagged to Zed’s stable releases. No new features, no backend changes, no community governance. Just a stable mirror with reliable versioning.</p>
+<p>If your only complaint about upstream GPUI is that versioning is a headache, use this fork and move on.</p>
+<hr>
+<p><strong>Kael</strong></p>
+<p>Kael is the most ambitious independent bet in the GPUI ecosystem. It started as adabraka-gpui, a fork for a video editor called OpenReel. At some point the maintainer realized the framework itself was more valuable than the application, so the project pivoted. The video editor is now just one consumer of Kael.</p>
+<p>Today Kael positions itself as a general-purpose desktop UI framework. The scope is substantial: radial and conic gradients in the core styling API, webviews, form controls, rich text, Lottie animation playback, backdrop blur, gesture recognizers, system tray, global hotkeys, notifications, media playback and capture. The built-in component library, kael-ui, ships over one hundred components with eighteen themes and custom theming.</p>
+<p>On custom shaders, the maintainer is unequivocal: committed, and at the top of the GPU roadmap. The plan is a public render target and pass API with application-registered shaders and compute pipelines across Metal, DX11, and Vulkan. Offscreen RGBA16F targets and compute on Metal are already working in development.</p>
+<p>The maintainer’s stance on the relationship with Zed is clear: the Zed team has made their priorities explicit, so Kael was deliberately not structured as a fork that tracks upstream.² Kael keeps the three native backends rather than migrating to wgpu, and builds what desktop apps need without waiting on Zed.</p>
+<p>If you want a batteries-included framework with components, media, and custom shaders on the roadmap, Kael is your bet. But understand what you’re signing up for: you’re leaving upstream behind, by design.</p>
+<hr>
+<p><strong>The Practical Decision Tree</strong></p>
+<pre><code>Is your app Zed-shaped (text, data, tooling)?
+├── Yes → Upstream GPUI
+│
+├── Need custom shaders or 3D? → Kael
+│
+├── Need wgpu backend + smooth scrolling? → WGPUI
+│
+├── Need community governance + upstream tracking? → gpui-ce
+│
+└── Need stable versioned releases only? → gpui-unofficial
+</code></pre>
+<hr>
+<p><strong>The Fragmentation Question</strong></p>
+<p>You might look at this landscape and see fragmentation. You’re not wrong. There are now four significant forks plus upstream, each with different priorities and backends.</p>
+<p>But there’s also a case for optimism. The maintainers are aware of the fragmentation and some are actively working against it. The gpui-ce team has stated their goal is de-fragmentation and willingness to compromise for a consolidated effort. The Kael maintainer has expressed interest in coordinating with gpui-ce on shared pieces — the shape of a custom shader API in particular seems like something worth not designing four different ways.</p>
+<p>The GitHub discussion that surfaced much of this also raised an idea worth watching: a headless primitives layer that could bridge the ecosystem without more fragmentation — a clean separation between rendering engine, headless primitives, styled widgets, and application. It’s a community suggestion rather than an adopted roadmap item, but it maps directly to the architecture we’ll build in Chapter 12.</p>
+<p>The forks are a sign of life, not death. People are building things. The framework matters enough to fork.</p>
+<hr>
+<p><strong>A Note on Licensing</strong></p>
+<p>Some forks and components may have different licensing than upstream GPUI — see Appendix A for the full boundary.</p>
+<hr>
+<p><strong>Bottom Line</strong></p>
+<p>Forks exist because GPUI’s focus is Zed, not you. That’s not a failure — it’s an opportunity. Each fork solves a different problem. The decision tree above gives you the framework; your choice depends on whether you need feature freedom, stable mirrors, or batteries-included primitives.</p>
+<p>In the next chapter we’ll look at third-party component libraries — which work across multiple forks and give you another layer of reusable UI without committing to a fork at all.</p>
+<hr>
+<p><em>¹ Futureboard is a modern DAW being built with WGPUI. See [futureboard link to be added before publication].</em></p>
+<p><em>² From the Kael fork GitHub discussion thread. [Link to be verified before publication.]</em></p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-10-third-party-components"><a class="header" href="#chapter-10-third-party-components">Chapter 10: Third-Party Components</a></h1>
+<p>You’ve made it through the fork landscape. You understand the upstream constraints and have chosen a path. Now you need to actually build your UI — buttons, inputs, dialogs, tables. Do you build everything from scratch using GPUI’s primitives, or do you stand on the shoulders of those who’ve gone before?</p>
+<p>This chapter maps the third-party component landscape. Unlike the forks in Chapter 9, which change the framework itself, these libraries work on top of GPUI. You can use them with upstream or with most forks, and they range from focused component collections to full-blown UI toolkits.</p>
+<p>To add any of these libraries to your project, the pattern is the same: <code>cargo add gpui-component</code> (or <code>gpui-ui-kit</code>, etc.) and follow the library’s specific setup instructions. Now let’s look at what each one offers.</p>
+<hr>
+<h2 id="gpui-component"><a class="header" href="#gpui-component">gpui-component</a></h2>
+<p>The most complete component library in the ecosystem is gpui-component, built by the team at Longbridge for their trading platform. It’s not an academic exercise — it’s production code running a real financial application, which means it has been battle-tested against serious performance requirements.</p>
+<p>The library includes over sixty cross-platform desktop UI components, drawing inspiration from native macOS and Windows controls while blending in modern design language from shadcn/ui. The feature set is extensive: virtualized tables and lists for smooth rendering of large datasets, built-in charting capabilities, a high-performance code editor supporting up to two hundred thousand lines with Language Server Protocol integration, dock layouts for panel arrangements, and native Markdown with basic HTML rendering.</p>
+<p>The component list covers most of what a typical desktop app needs. For core UI, you get buttons with multiple variants, cards, dialogs, menus, menu bars, tabs, and toasts. For forms, there’s input with rich editing capabilities including mouse drag selection, clipboard operations, and Emacs keybindings, plus number inputs with spin buttons, checkboxes, toggles, selects, color pickers, sliders, and wizards. For data display, badges, progress indicators, spinners, avatars, and typography components. For feedback, alerts, inline alerts, and tooltips. For layout, stacks, spacers, dividers, pane dividers, accordions, and breadcrumbs.</p>
+<p>The library has one non-negotiable requirement: your entire application must be wrapped in a <code>Root</code> component that provides theming and global state management. This is not optional. If you’re integrating gpui-component into an existing app, you’ll need to refactor to put <code>Root</code> at the top of your view tree. The licensing is Apache 2.0, matching GPUI itself, so you can use it in commercial applications without concern.</p>
+<hr>
+<h2 id="gpui-ui-kit"><a class="header" href="#gpui-ui-kit">gpui-ui-kit</a></h2>
+<p>If gpui-component is the production workhorse, gpui-ui-kit is the more experimental sibling. It offers a similar range of components with some notable additions, particularly controls that are well-suited for audio applications — potentiometer knobs, vertical sliders, and volume controls.</p>
+<p>The component set overlaps heavily with gpui-component: buttons, icon buttons, cards, dialogs, menus, tabs, toasts, inputs, checkboxes, toggles, selects, color pickers, sliders, badges, progress indicators, spinners, avatars, typography, alerts, tooltips, stacks, spacers, dividers, and breadcrumbs.</p>
+<p>Where gpui-ui-kit distinguishes itself is in its audio-focused controls and its documentation presentation. The library is well-documented on docs.rs, and the API feels slightly more polished in places. That said, it has fewer components overall than gpui-component and lacks some of the advanced features like virtualized tables and built-in charting.</p>
+<p>Use gpui-ui-kit when you need audio-style controls or prefer its API design. Use gpui-component when you need maximum component coverage and production pedigree.</p>
+<hr>
+<h2 id="gpui-kit-vitesse"><a class="header" href="#gpui-kit-vitesse">gpui-kit (Vitesse)</a></h2>
+<p>This one is worth watching but not yet ready for prime time. gpui-kit, also called Vitesse, is an upcoming UI toolkit with an ambitious three-layer architecture: headless primitives in the vein of Radix or Headless UI, a color library with optional themes, and styled components built on top. The goal is to provide accessible, unstyled building blocks that you can customize completely, separate from opinionated design decisions.</p>
+<p>As of this writing, the project is still in planning. The repository exists, the vision is documented, but there’s not yet a stable release you can depend on. Keep an eye on it. If the team delivers on the headless primitives layer, it could become the foundation that the ecosystem desperately needs.</p>
+<hr>
+<h2 id="kael-ui"><a class="header" href="#kael-ui">kael-ui</a></h2>
+<p>Remember Kael from Chapter 9? The batteries-included fork ships with its own component library, kael-ui, living inside the same monorepo. This is not a separate library you can pull in independently — it’s part of the Kael framework. The component set is substantial: over one hundred components with eighteen built-in themes and full custom theming support.</p>
+<p>Because kael-ui is tightly coupled to the Kael fork, you can’t easily use it with upstream GPUI or other forks. The components assume Kael’s extended styling API, its custom primitives, and its rendering backend. If you’ve chosen Kael as your framework, you get kael-ui for free. If you’re on upstream, this is not an option.</p>
+<hr>
+<h2 id="the-missing-headless-primitives-layer"><a class="header" href="#the-missing-headless-primitives-layer">The Missing Headless Primitives Layer</a></h2>
+<p>Here’s the problem that none of these libraries fully solves.</p>
+<p>Every component library currently available is opinionated. gpui-component has a specific look. gpui-ui-kit has another. kael-ui has a third. If you don’t like their default styling, or if your application’s design language doesn’t match, you’re left fighting the library’s theming system — or rebuilding components from scratch.</p>
+<p>What’s missing is a headless primitives layer: unstyled, accessible components that handle behavior, focus management, keyboard interactions, and accessibility attributes, but leave styling completely to the developer. This is what Radix provides for React, what Headless UI provides for Vue, and what gpui-kit (Vitesse) is promising but hasn’t delivered.</p>
+<p>The absence of this layer matters most for text input. As we discussed in Appendix A, GPUI itself doesn’t ship an input component. The third-party libraries do, but each comes with its own styling and behavior assumptions. If you need a text input that matches your custom design, you’re back to building it yourself from GPUI’s primitives, as we’ll cover in Chapter 11.</p>
+<hr>
+<h2 id="when-to-use-a-library-vs-build-your-own"><a class="header" href="#when-to-use-a-library-vs-build-your-own">When to Use a Library vs. Build Your Own</a></h2>
+<p>Here’s the decision rule.</p>
+<p>Use gpui-component if you want the most complete, production-tested component set and you’re willing to accept its design language and the <code>Root</code> wrapper requirement. This is the fastest path from zero to functional app.</p>
+<p>Use gpui-ui-kit if you prefer its API or need controls suited for audio applications.</p>
+<p>Use kael-ui if you’ve already committed to the Kael framework. You get components as part of the deal.</p>
+<p>Build your own components if your application has a custom design language that doesn’t match these libraries, or if you need fine-grained control over behavior that the libraries don’t expose. The effort is higher, but the result is uniquely yours.</p>
+<p>Wait for gpui-kit if you want headless primitives and are willing to be patient. The project hasn’t shipped yet, but its vision is the right one for the ecosystem.</p>
+<hr>
+<h2 id="the-root-problem"><a class="header" href="#the-root-problem">The Root Problem</a></h2>
+<p>One more thing about gpui-component’s <code>Root</code> requirement. It’s not arbitrary — the <code>Root</code> component manages theme context, global shortcuts, dialog stacks, and notification toasts. This is a reasonable architectural choice. But it means you cannot incrementally adopt gpui-component. Your entire application must be wrapped from the start, or you refactor later.</p>
+<p>If you’re starting a new project, this is fine. Add <code>Root</code> at the top of your view hierarchy and forget about it. If you’re adding gpui-component to an existing project, budget time for the refactor.</p>
+<hr>
+<h2 id="bottom-line"><a class="header" href="#bottom-line">Bottom Line</a></h2>
+<p>The third-party component landscape is healthier than the fork landscape suggests. gpui-component gives you over sixty production-ready components. gpui-ui-kit offers a solid alternative with audio-focused extras. kael-ui is there if you’re on Kael. And gpui-kit points toward a headless future that doesn’t yet exist.</p>
+<p>Each library makes design decisions you may want to override. That’s not a flaw — it’s the nature of opinionated code. The question is whether those opinions align with your needs.</p>
+<p>In the next chapter, we’ll drop down to the foundations: text and data. Because whether you use a component library or build your own, you need to understand how GPUI handles text storage, selection, and input. And that’s where things get interesting.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-11-text-foundations-the-input-you-have-to-build-yourself"><a class="header" href="#chapter-11-text-foundations-the-input-you-have-to-build-yourself">Chapter 11: Text Foundations: The Input You Have to Build Yourself</a></h1>
+<p>If you want to understand why building native UI is hard, look at text.</p>
+<p>Here’s a simple search bar. You capture a keystroke and append it to a string. In Rust, that string is UTF-8. Characters can be one to four bytes. The emoji “🦀” is four bytes. If your cursor lands anywhere inside those four bytes, Rust will panic.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut query = String::from("Hi 🦀");
+// The user moves the cursor back one space and types "!"
+query.insert(4, '!');
+// PANIC: byte index 4 is not a char boundary; it is inside '🦀' (bytes 3..7)
+<span class="boring">}</span></code></pre>
+<p>String operations in Rust index by bytes. The emoji “🦀” spans bytes 3 through 7. Index 4 lands inside the emoji, and Rust refuses to split a character. This is the trap. Standard strings index by bytes. User interfaces index by characters (graphemes). Mix them, and your app crashes the moment someone types an emoji or a non-Latin character.</p>
+<h2 id="what-gpui-gives-you-and-what-it-doesnt"><a class="header" href="#what-gpui-gives-you-and-what-it-doesnt">What GPUI Gives You (And What It Doesn’t)</a></h2>
+<p>GPUI is a rendering engine and a windowing system. It is not a text editor out of the box. Before you build an input field, understand exactly where the framework stops and your responsibility begins.</p>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Feature</th><th>Who Provides It</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Keyboard Events</td><td>GPUI</td><td><code>KeyDownEvent</code> delivers raw keystrokes</td></tr>
+<tr><td>Focus Management</td><td>GPUI</td><td><code>FocusHandle</code> routes events to your element</td></tr>
+<tr><td>Clipboard Access</td><td>GPUI</td><td>Platform services read/write the system clipboard</td></tr>
+<tr><td>Text Storage</td><td><strong>You</strong></td><td>GPUI has no built-in <code>InputState</code> or text buffer</td></tr>
+<tr><td>Cursor Position</td><td><strong>You</strong></td><td>Track where the blinking cursor lives</td></tr>
+<tr><td>Selection</td><td><strong>You</strong></td><td>Track highlighted ranges as byte offsets</td></tr>
+<tr><td>Undo/Redo</td><td><strong>You</strong></td><td>Maintain a stack of <code>Change</code> operations</td></tr>
+<tr><td>IME Composition</td><td><strong>You</strong></td><td>Handle multi-event input for Chinese, Japanese, Korean</td></tr>
+</tbody>
+</table>
+</div>
+<p>Look at that table. GPUI handles the low-level plumbing. You handle everything that makes text behave like text.</p>
+<h2 id="the-rope-solution"><a class="header" href="#the-rope-solution">The Rope Solution</a></h2>
+<p>Because standard <code>String</code> requires O(n) time to insert a character in the middle of a large document, and because byte-offset math is a minefield, the Rust text-editing ecosystem relies on a different data structure: the <strong>rope</strong>.</p>
+<p>A rope is a tree of string slices. Inserting or deleting text anywhere in the document takes O(log n) time — exponentially faster than O(n) for large documents. More importantly for UI, the standard crate — <code>ropey</code> — operates on character indices.</p>
+<p>You don’t need to master <code>ropey</code>. You need a tiny fraction of its API:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use ropey::Rope;
+
+let mut text = Rope::from_str("Hello");
+text.insert_char(5, '!');    // Safe, O(log n), indexed by character
+text.remove(0..1);            // Removes the 'H'
+let len = text.len_chars();   // Length in characters, not bytes
+<span class="boring">}</span></code></pre>
+<p><strong>Version note:</strong> Check the <code>ropey</code> version you’re depending on. The 1.x and 2.x APIs differ on whether indices are character-based or byte-based. This book uses 1.x conventions.</p>
+<h2 id="the-minimal-working-input"><a class="header" href="#the-minimal-working-input">The Minimal Working Input</a></h2>
+<p>Let’s wire <code>ropey</code> and GPUI together. A functioning text input needs three pieces: state, event handling, and rendering.</p>
+<h3 id="1-the-state"><a class="header" href="#1-the-state">1. The State</a></h3>
+<p>Your component needs a <code>Rope</code> for the text buffer, a <code>usize</code> for the cursor position (tracked as a character offset, not a byte index), and a <code>FocusHandle</code> so GPUI routes keyboard events correctly.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use gpui::*;
+use ropey::Rope;
+
+pub struct TextInput {
+    buffer: Rope,
+    cursor_offset: usize,    // Character index, NOT byte offset
+    focus_handle: FocusHandle,
+}
+<span class="boring">}</span></code></pre>
+<p>Real-world inputs like <code>gpui-component</code>’s <code>InputState</code> add much more: selection ranges, undo history, display maps for line wrapping, scroll handles, IME marked ranges, validation rules, masking, and LSP integration. But this minimal state gets you typing.</p>
+<h3 id="2-event-handling"><a class="header" href="#2-event-handling">2. Event Handling</a></h3>
+<p>When your element renders, attach the focus handle and listen for keystrokes. Intercept navigation and editing commands — Backspace, Left Arrow, Right Arrow — and pass normal characters directly into the <code>Rope</code>.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl TextInput {
+    fn handle_key_down(&amp;mut self, event: &amp;KeyDownEvent, cx: &amp;mut Context&lt;Self&gt;) {
+        let key = &amp;event.keystroke.key;
+
+        match key.as_str() {
+            "backspace" =&gt; {
+                if self.cursor_offset &gt; 0 {
+                    // ropey removes the character before the cursor safely
+                    self.buffer.remove((self.cursor_offset - 1)..self.cursor_offset);
+                    self.cursor_offset -= 1;
+                }
+            }
+            "left" =&gt; {
+                self.cursor_offset = self.cursor_offset.saturating_sub(1);
+            }
+            "right" =&gt; {
+                self.cursor_offset = (self.cursor_offset + 1).min(self.buffer.len_chars());
+            }
+            _ =&gt; {
+                // Single character? Insert it.
+                if key.chars().count() == 1 {
+                    let c = key.chars().next().unwrap();
+                    self.buffer.insert_char(self.cursor_offset, c);
+                    self.cursor_offset += 1;
+                }
+            }
+        }
+        cx.notify(); // Tell GPUI we changed state
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>In production inputs like <code>gpui-component</code>’s <code>InputState</code>, the event handler is far more sophisticated. It tracks selection state, handles clipboard operations, manages undo stack entries, and coordinates with the IME system.</p>
+<h3 id="3-rendering"><a class="header" href="#3-rendering">3. Rendering</a></h3>
+<p>Finally, draw the component. Slice the <code>Rope</code> into a standard string for GPUI’s text renderer, and show a cursor.</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>impl Render for TextInput {
+    fn render(&amp;mut self, _window: &amp;mut Window, cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
+        let display_text = self.buffer.to_string();
+
+        div()
+            .track_focus(&amp;self.focus_handle)
+            .on_key_down(cx.listener(Self::handle_key_down))
+            .p_2()
+            .bg(rgb(0x1e1e1e))
+            .border_1()
+            .border_color(if self.focus_handle.is_focused(cx) {
+                rgb(0x3b82f6)
+            } else {
+                rgb(0x4a5568)
+            })
+            .child(display_text)
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>A production input would also compute the exact pixel position of the cursor for precise placement. <code>gpui-component</code>’s internal layout caching handles this, but that implementation is specific to the library.</p>
+<h2 id="the-missing-pieces-ime"><a class="header" href="#the-missing-pieces-ime">The Missing Pieces: IME</a></h2>
+<p>The code above works for English text. It fails for Chinese, Japanese, and Korean.</p>
+<p>Input Method Editors (IMEs) allow users to type characters not on their keyboard. Japanese users type “nihongo” and get a candidate window to select 「日本語」. During composition, keystrokes <em>do not</em> produce final characters immediately. If you insert them directly into your buffer, the IME breaks.</p>
+<p>GPUI provides IME events, but you must handle them correctly. The key is detecting when a keystroke is part of active IME composition:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Check if keydown event is part of IME composition
+if event.is_composing() {
+    // IME is composing — don't insert into buffer
+    return;
+}
+<span class="boring">}</span></code></pre>
+<p><strong>Technical note:</strong> The code above uses <code>event.is_composing()</code> as the correct GPUI native event check. (If you see references to <code>key_code == 229</code> in web-focused examples, that’s a browser convention, not a native desktop one.)</p>
+<p>On Linux, pressing Enter while composing with Chinese IME should not send a message — it should commit the composition. The fix required checking the compose status before dispatching <code>KeyDown</code> events.</p>
+<p>On macOS, IME handling is even more complex. When a user types a dead key (like ` on a Brazilian layout) or a special character with Cmd held (like Cmd+ç on Spanish layout), the IME consumes the event before GPUI sees it. Recent fixes in GPUI bypass the IME for Cmd+key events while preserving composition state.</p>
+<p>A complete input implementation must track an “IME marked range” — temporary text that the IME is composing — and only commit it to the <code>Rope</code> when composition ends. IME composition produces multiple events per character; you must buffer the composition string and only commit to the rope when composition ends. <code>gpui-component</code>’s <code>InputState</code> does exactly this, storing <code>ime_marked_range: Option&lt;Selection&gt;</code> alongside the main text buffer.</p>
+<h2 id="the-missing-pieces-selection-and-undo"><a class="header" href="#the-missing-pieces-selection-and-undo">The Missing Pieces: Selection and Undo</a></h2>
+<p>A usable text input also needs selection and undo.</p>
+<p>Selection is a range of byte offsets in the buffer. A collapsed range (start == end) represents a cursor position. You need to handle:</p>
+<ul>
+<li>Shift + arrow keys to extend selection</li>
+<li>Double-click to select words</li>
+<li>Triple-click to select lines</li>
+<li>Drag to select with the mouse</li>
+</ul>
+<p><code>gpui-component</code> implements word selection by checking each character’s <code>CharType</code> (Word, Whitespace, Newline, Other) and expanding the range to boundaries.</p>
+<p>Undo requires a stack of <code>Change</code> operations. Each text insertion or deletion pushes a <code>Change</code> onto the history. Ctrl+Z pops the last change and reverses it. The history stack should have a maximum size to prevent memory growth. <code>gpui-component</code>’s <code>InputState</code> includes <code>history: History&lt;Change&gt;</code> as a core field.</p>
+<h2 id="which-path-to-choose"><a class="header" href="#which-path-to-choose">Which Path to Choose?</a></h2>
+<p>If you’re building a specialized internal tool or a command palette, the minimal rope-backed input we just built is sufficient. You need the three pieces — state, events, rendering — and you can stop there.</p>
+<p>But if text editing is a primary feature of your application, do not build from scratch. As outlined in Appendix A, you have better options:</p>
+<ul>
+<li>
+<p><strong>Copy from Zed</strong>: The <code>ui_input</code> crate contains <code>SingleLineInput</code> and <code>MultiLineInput</code>. The code is there, but it’s GPL-licensed. Copying it puts your project under GPL. See Appendix A for the full licensing boundary.</p>
+</li>
+<li>
+<p><strong>Use <code>gpui-component</code></strong>: Provides <code>InputState</code> with rope manipulation, selection, undo history, IME composition handling, line measurement, validation rules, and LSP integration — all under Apache 2.0.</p>
+</li>
+</ul>
+<p>For most commercial applications, <code>gpui-component</code> is the right answer. It implements everything this chapter outlined — and dozens of details we skipped — in production-tested code.</p>
+<p>In the next chapter, we’ll move from text foundations to application structure: how to organize a real GPUI project so your business logic stays clean and testable.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-12-structuring-a-real-application-1"><a href="#chapter-12-structuring-a-real-application-1" class="header">Chapter 12: Structuring a Real Application</a></h1>
+<h2 id="chapter-12-structuring-a-real-application"><a class="header" href="#chapter-12-structuring-a-real-application">Chapter 12: Structuring a Real Application</a></h2>
+<p>You’ve built components, wrestled with text input, and navigated the ecosystem. Now the question is mechanical: how do you organize code so your business logic doesn’t tangle itself in GPUI’s event loop, and how do you test that logic without opening a window?</p>
+<p>This chapter answers that with a specific structure — the concrete workspace layout and crate boundaries that make a GPUI application maintainable as it grows.</p>
+<hr>
+<p><strong>The Four-Layer Architecture</strong></p>
+<p>A robust GPUI application separates concerns through four distinct layers:</p>
+<p><strong>The Rendering Layer</strong> is the absolute bottom. GPUI manages the windowing system, the event loop, the GPU pipeline, and flexbox layout. You rarely interact with this directly beyond initializing the <code>App</code>.</p>
+<p><strong>The Primitives Layer</strong> is the declarative API layer. Elements like <code>div()</code>, <code>text()</code>, and <code>svg()</code> are stateless building blocks. They describe what something looks like but hold no application state.</p>
+<p><strong>The Widgets Layer</strong> is where primitives become reusable, interactive components. Widgets are stateful but strictly product-blind. A button knows how to animate when clicked. It does not know what that click achieves.</p>
+<p><strong>The Product Layer</strong> is the orchestrator. This layer catches widget interactions and binds them to your business logic.</p>
+<p>The rule that makes this model work: <strong>your domain logic should never import GPUI.</strong></p>
+<hr>
+<p><strong>The Pure Core Pattern</strong></p>
+<p>Put your business logic in a separate crate with no dependencies on <code>gpui</code>, <code>winit</code>, or any UI framework. That crate should compile to native Rust and nothing else. No <code>div</code>, no <code>cx.spawn()</code>, no focus handles.</p>
+<p>The structure is straightforward:</p>
+<pre><code class="language-text">myapp/
+├── Cargo.toml           # Workspace root
+├── crates/
+│   ├── domain/          # Pure business logic
+│   │   ├── Cargo.toml   # No GPUI dependency
+│   │   └── src/
+│   │       └── lib.rs
+│   ├── ui/              # GPUI application
+│   │   ├── Cargo.toml   # Depends on domain + gpui
+│   │   └── src/
+│   │       └── main.rs
+│   └── cli/             # Headless CLI harness
+│       ├── Cargo.toml   # Depends on domain only
+│       └── src/
+│           └── main.rs
+</code></pre>
+<hr>
+<p><strong>Cargo Workspaces</strong></p>
+<p>A Cargo workspace manages multiple related crates in a single repository:</p>
+<pre><code class="language-toml"># Root Cargo.toml
+[workspace]
+members = [
+    "crates/domain",
+    "crates/ui",
+    "crates/cli",
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+
+[workspace.dependencies]
+gpui = { git = "https://github.com/zed-industries/zed", package = "gpui" }
+serde = { version = "1.0", features = ["derive"] }
+thiserror = "1.0"
+</code></pre>
+<p>The domain crate’s <code>Cargo.toml</code> stays deliberately lean:</p>
+<pre><code class="language-toml">[package]
+name = "myapp-domain"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde.workspace = true
+thiserror.workspace = true
+# No gpui here — enforced by Cargo
+</code></pre>
+<p>Cargo enforces the boundary. You cannot accidentally import GPUI into your domain crate — it simply isn’t in the dependency graph.</p>
+<hr>
+<p><strong>The Domain: An Example</strong></p>
+<p>Let’s build a markdown previewer. The domain crate:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// crates/domain/src/lib.rs
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+pub struct MarkdownDoc {
+    pub raw_text: String,
+    pub word_count: usize,
+}
+
+impl MarkdownDoc {
+    pub fn new(text: String) -&gt; Self {
+        let word_count = text.split_whitespace().count();
+        Self { raw_text: text, word_count }
+    }
+
+    pub fn update_text(&amp;mut self, new_text: String) {
+        let new_word_count = new_text.split_whitespace().count();
+        self.raw_text = new_text;
+        self.word_count = new_word_count;
+    }
+
+    pub fn export_html(&amp;self) -&gt; String {
+        format!("&lt;h1&gt;Preview&lt;/h1&gt;\n&lt;p&gt;{}&lt;/p&gt;", self.raw_text)
+    }
+}
+
+pub struct DocumentStore {
+    documents: Vec&lt;MarkdownDoc&gt;,
+    current_index: usize,
+}
+
+impl DocumentStore {
+    pub fn new() -&gt; Self {
+        Self {
+            documents: vec![MarkdownDoc::new(String::new())],
+            current_index: 0,
+        }
+    }
+
+    pub fn current_document(&amp;self) -&gt; &amp;MarkdownDoc {
+        &amp;self.documents[self.current_index]
+    }
+
+    pub fn update_current_document(&amp;mut self, new_text: String) {
+        self.documents[self.current_index].update_text(new_text);
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>No <code>gpui</code>. No <code>cx</code>. Just Rust. You can run <code>cargo test</code> on this crate without a window server, a GPU, or an event loop.</p>
+<hr>
+<p><strong>The UI Layer: Thin and Deliberate</strong></p>
+<p>In GPUI, state is owned by whoever creates it via <code>cx.new()</code>. The resulting <code>Entity&lt;T&gt;</code> is your handle. Everything flows from where you store that handle.</p>
+<p>The application root creates the <code>DocumentStore</code> entity and hands it to the view:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// crates/ui/src/main.rs
+use gpui::*;
+use myapp_domain::DocumentStore;
+
+struct EditorApp {
+    document: Entity&lt;DocumentStore&gt;,
+}
+
+impl EditorApp {
+    fn new(cx: &amp;mut Context&lt;Self&gt;) -&gt; Self {
+        Self {
+            document: cx.new(|_cx| DocumentStore::new()),
+        }
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The view reads from the entity and renders it:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// crates/ui/src/document_view.rs
+use gpui::*;
+use myapp_domain::DocumentStore;
+
+pub struct DocumentView {
+    document: Entity&lt;DocumentStore&gt;,
+    focus_handle: FocusHandle,
+}
+
+impl Render for DocumentView {
+    fn render(&amp;mut self, _window: &amp;mut Window, cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
+        let doc = self.document.read(cx).current_document().clone();
+
+        div()
+            .track_focus(&amp;self.focus_handle)
+            .flex()
+            .flex_col()
+            .size_full()
+            .child(
+                div()
+                    .text_sm()
+                    .text_color(rgb(0x6b7280))
+                    .child(format!("Word count: {}", doc.word_count))
+            )
+            .child(
+                div()
+                    .mt_4()
+                    .p_4()
+                    .bg(rgb(0x1e1e1e))
+                    .child(doc.raw_text)
+            )
+    }
+}
+<span class="boring">}</span></code></pre>
+<p>The component reads the current document from the entity, renders it using primitives, and knows nothing about how the document got its content.</p>
+<hr>
+<p><strong>Four Architectural Lessons</strong></p>
+<p><strong>Lesson one: drop UI metadata at the boundary.</strong></p>
+<p>When a user clicks, GPUI generates events containing screen coordinates and pixel bounds. Your domain logic should never see these. The Product layer catches the raw event, strips the framework-specific metadata, and hands the core exactly what it needs — a clean string or a semantic command.</p>
+<p><strong>Lesson two: ownership boundaries are enforced by where you store the handle.</strong></p>
+<p><code>Entity&lt;T&gt;</code> is GPUI’s universal handle. Whoever holds it, owns the lifetime. If you store an <code>Entity&lt;DocumentStore&gt;</code> in a component that recreates documents frequently, the old entities won’t be dropped until the component itself is dropped — which may never happen. Use <code>WeakEntity</code> for references that should not extend lifetimes:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Store a weak reference when you observe but don't own
+let weak_doc = self.document.downgrade();
+<span class="boring">}</span></code></pre>
+<p>The question to ask at every boundary: should this component own this state, or just observe it?</p>
+<p><strong>Lesson three: use subscriptions for cross-cutting concerns.</strong></p>
+<p>Rather than manually pushing updates to every component, broadcast changes through GPUI’s subscription system. One component updates the entity. Every subscribed view receives a notification and re-renders:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// In a component that observes but doesn't own the document
+cx.subscribe(&amp;document_entity, |this, _entity, _event, cx| {
+    cx.notify(); // Re-render when the document changes
+}).detach();
+<span class="boring">}</span></code></pre>
+<p>The domain publishes events. The UI subscribes. Components re-render when they need to, not when you manually tell them to.</p>
+<p><strong>Lesson four: lifecycle discipline prevents silent leaks.</strong></p>
+<p>Subscriptions and tasks follow RAII — drop the handle, cancel the subscription. Store subscriptions in your struct if you want them to live as long as the component. Drop them if you want to stop listening. The same applies to async tasks. If a component is removed from the view tree while a background task is running, <code>WeakEntity::update()</code> returns <code>Err</code> and exits cleanly. No orphaned operations, no silent memory growth.</p>
+<hr>
+<p><strong>The CLI Harness</strong></p>
+<p>The final crate proves the pure core actually works without a UI:</p>
+<pre><code class="language-toml"># crates/cli/Cargo.toml
+[package]
+name = "myapp-cli"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+myapp-domain = { path = "../domain" }
+# No gpui
+</code></pre>
+<pre class="playground"><code class="language-rust">// crates/cli/src/main.rs
+use myapp_domain::DocumentStore;
+
+fn main() {
+    let mut store = DocumentStore::new();
+    store.update_current_document("# Hello\n\nThis is a test.".into());
+    let doc = store.current_document();
+    println!("Words: {}", doc.word_count);
+    println!("HTML: {}", doc.export_html());
+}</code></pre>
+<p>Run with <code>cargo run --bin myapp-cli</code>. No window, no GPU, no event loop. The domain logic runs in complete isolation:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn word_count_updates_on_edit() {
+        let mut store = DocumentStore::new();
+        store.update_current_document("hello world".into());
+        assert_eq!(store.current_document().word_count, 2);
+    }
+
+    #[test]
+    fn export_html_wraps_content() {
+        let doc = MarkdownDoc::new("test content".into());
+        assert!(doc.export_html().contains("&lt;p&gt;test content&lt;/p&gt;"));
+    }
+}
+<span class="boring">}</span></code></pre>
+<p><code>cargo test</code> on the domain crate runs in milliseconds. When GPUI shifts under you — a new version, a fork migration — your domain logic doesn’t feel a thing. The separation isn’t just good practice. It’s what makes your application portable.</p>
+<hr>
+<p><strong>What’s Next</strong></p>
+<p>The application is structured. The domain is clean. Now it needs to interact with the platform it’s running on — file dialogs, clipboard, system tray, and the places where macOS, Windows, and Linux behave differently than you’d expect.</p>
+<p>Chapter 13: Platform Features and Cross-Platform Concerns.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-13-platform-features-and-cross-platform-concerns-1"><a href="#chapter-13-platform-features-and-cross-platform-concerns-1" class="header">Chapter 13: Platform Features and Cross-Platform Concerns</a></h1>
+<h2 id="chapter-13-platform-features-and-cross-platform-concerns"><a class="header" href="#chapter-13-platform-features-and-cross-platform-concerns">Chapter 13: Platform Features and Cross-Platform Concerns</a></h2>
+<p>Up until now, we have lived entirely inside the GPUI window. We have drawn pixels, managed state, and handled keyboard focus. But a real desktop application needs to copy text, save files, open external browsers, and communicate with the host operating system.</p>
+<p>GPUI abstracts macOS, Windows, and Linux behind a unified <code>Platform</code> trait. However, crossing the boundary from your UI into the host operating system introduces async complexity, testing headaches, and strict component library boundaries.</p>
+<h3 id="file-dialogs-and-system-integration"><a class="header" href="#file-dialogs-and-system-integration">File Dialogs and System Integration</a></h3>
+<p>If you want a user to select a file, you should not build a custom file tree in GPUI. You should use the native OS file picker. GPUI provides direct access to these native dialogs via <code>prompt_for_paths()</code> and <code>prompt_for_new_path()</code>.</p>
+<p>Because waiting for a user to navigate their hard drive could take minutes, these platform APIs return futures. You spawn a task with <code>cx.spawn()</code> and await the user’s selection without blocking the UI thread:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>cx.spawn(|this, mut cx| async move {
+    let paths = this.update(&amp;mut cx, |this, cx| {
+        cx.prompt_for_paths(PromptOptions::default())
+    }).await?;
+    // Handle the selected paths
+}).detach();
+<span class="boring">}</span></code></pre>
+<p>Alongside file dialogs, the platform services provide cross-platform hooks to hand operations off to the OS:</p>
+<ul>
+<li><code>reveal_path()</code>: Opens the native file explorer (Finder on macOS, Explorer on Windows) and highlights the file.</li>
+<li><code>open_with_system()</code>: Opens a file using the user’s default registered application.</li>
+<li><code>open_url()</code>: Launches the system’s default web browser.</li>
+</ul>
+<h3 id="titlebar-and-window-decoration"><a class="header" href="#titlebar-and-window-decoration">Titlebar and Window Decoration</a></h3>
+<p>GPUI gives you control over the window titlebar, but the level of control depends on your platform and fork choice.</p>
+<p>On macOS, you can enable native titlebar styling with <code>window.set_titlebar_appears_transparent()</code> or hide it entirely with <code>window.set_titlebar_hidden()</code>. When hidden, you become responsible for draggable regions — use <code>.on_drag()</code> on your custom titlebar element to allow window movement.</p>
+<p>On Windows and Linux, titlebar behavior is more constrained. Upstream GPUI provides basic titlebar configuration, but deep customization often requires platform-specific code or a fork. WGPUI, for example, offers more consistent titlebar handling across all three platforms due to its unified winit backend.</p>
+<p>The practical rule: for custom titlebars on macOS, use GPUI’s native APIs. For cross-platform custom titlebars, test each target or consider a fork like WGPUI that abstracts the differences.</p>
+<h3 id="the-clipboard-and-the-fork-boundary"><a class="header" href="#the-clipboard-and-the-fork-boundary">The Clipboard and The Fork Boundary</a></h3>
+<p>To support copying and pasting, GPUI provides clipboard read/write capabilities. The exact API shape is subject to change, but the pattern is consistent: you access clipboard services through the context object <code>cx</code> and interact with them asynchronously.</p>
+<p>Integrating the clipboard highlights a critical architectural boundary if you are using third-party libraries. Recall from Chapter 10 that <code>gpui-component</code> provides an excellent, pre-built <code>InputState</code> for text editing. But <code>gpui-component</code> is strictly a UI library. It provides the text buffer manipulation, cursor positioning, and event handling, but <strong>clipboard APIs remain strictly at the raw GPUI framework level</strong>.</p>
+<p>If you want to implement a “Copy to Clipboard” button inside a custom <code>gpui-component</code> editor, you must bridge the gap yourself. Here’s the pattern, assuming the current API shape:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// Bridge gpui-component's text state to GPUI's platform clipboard
+let text = self.editor_state.value();  // Extract from gpui-component's InputState
+cx.write_to_clipboard(ClipboardItem::new_text(text));
+<span class="boring">}</span></code></pre>
+<p>The same pattern applies in reverse for paste operations: read from the clipboard and insert the text into <code>gpui-component</code>’s <code>InputState</code>.</p>
+<p><em>(Note: GPUI’s clipboard API is actively evolving. Consult the latest <code>gpui</code> documentation for the exact method names.)</em></p>
+<h3 id="system-tray-and-native-menus-the-missing-pieces"><a class="header" href="#system-tray-and-native-menus-the-missing-pieces">System Tray and Native Menus (The Missing Pieces)</a></h3>
+<p>Upstream GPUI does not provide system tray access. If your application relies on background tray icons, you have two options. First, use external Rust crates that implement platform-specific tray functionality. Second, use a fork like Kael, which ships system tray support as a first-class feature built directly into the framework.</p>
+<p>GPUI also does not natively invoke the host operating system’s context menus. Applications like Zed build their own cross-platform menus using the <code>deferred()</code> rendering hatch and explicit screen coordinate math to prevent edge overflow. You are responsible for drawing these menus using GPUI elements rather than relying on native OS menu widgets.</p>
+<h3 id="headless-testing"><a class="header" href="#headless-testing">Headless Testing</a></h3>
+<p>When you touch the file system or native OS dialogs, your code becomes vulnerable to platform-specific divergence. Paths behave differently on Windows than on macOS, and file locking semantics vary wildly.</p>
+<p>To test platform-dependent code without opening a window, GPUI provides the <code>#[gpui::test]</code> macro and <code>TestAppContext</code>. Here’s a minimal example:</p>
+<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[gpui::test]
+async fn test_clipboard_interaction(cx: &amp;mut TestAppContext) {
+    let text = "Hello, world!".to_string();
+    cx.write_to_clipboard(ClipboardItem::new_text(text.clone()));
+    let read_back = cx.read_from_clipboard().await.unwrap();
+    assert_eq!(read_back.text(), text);
+}
+<span class="boring">}</span></code></pre>
+<p>This test runs completely headless — no window server, no GPU, no user interaction. It’s fast enough to run in CI on every commit.</p>
+<p>For file system operations, apply the “Pure Core” pattern from Chapter 12. Inject a <code>MockFileSystem</code> during testing rather than calling GPUI’s platform APIs directly. Decouple command execution from GPUI’s platform layer, and you can simulate file selection and dialog responses without ever touching the real file system.</p>
+<h3 id="the-bridge-pattern-summary"><a class="header" href="#the-bridge-pattern-summary">The Bridge Pattern Summary</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Platform Feature</th><th>GPUI Provides</th><th>Alternative</th></tr>
+</thead>
+<tbody>
+<tr><td>File dialogs</td><td>✓ <code>prompt_for_paths()</code></td><td>—</td></tr>
+<tr><td>Open with system</td><td>✓ <code>open_with_system()</code></td><td>—</td></tr>
+<tr><td>Titlebar (macOS)</td><td>✓ <code>set_titlebar_hidden()</code>, <code>.on_drag()</code></td><td>—</td></tr>
+<tr><td>Titlebar (cross-platform)</td><td>Basic</td><td>WGPUI fork</td></tr>
+<tr><td>Clipboard</td><td>✓ Platform services</td><td>—</td></tr>
+<tr><td>System tray</td><td>—</td><td>External crates or Kael fork</td></tr>
+<tr><td>Native context menus</td><td>—</td><td>Build with GPUI elements + <code>deferred()</code></td></tr>
+<tr><td>Headless testing</td><td>✓ <code>#[gpui::test]</code> + <code>TestAppContext</code></td><td>Mock filesystem</td></tr>
+</tbody>
+</table>
+</div>
+<p>The pattern is consistent: GPUI gives you the low-level platform hooks. For features it doesn’t provide, you either bring an external crate, switch to a fork, or build the UI yourself in GPUI. The bridge code between these layers is minimal but critical — and now you have the pattern.</p>
+<hr>
+<p>In the final chapter, we’ll put it all together: distribution, binary size, and the final trade-offs of shipping a GPUI application.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="chapter-14-distribution-1"><a href="#chapter-14-distribution-1" class="header">Chapter 14: Distribution</a></h1>
+<h2 id="chapter-14-distribution"><a class="header" href="#chapter-14-distribution">Chapter 14: Distribution</a></h2>
+<p>You have built your application. The text input works, the platform features are wired, and the pure core is thoroughly tested. Now comes the final step: getting your binary into users’ hands.</p>
+<p>Distribution is where GPUI’s native foundation pays its largest dividend. No runtime, no embedded browser, no second executable to manage. Just a compiled binary and the system libraries it depends on.</p>
+<h3 id="binary-size-the-actual-numbers"><a class="header" href="#binary-size-the-actual-numbers">Binary Size: The Actual Numbers</a></h3>
+<p>Let’s start with the comparison every developer wants to see.</p>
+<p>A minimal Electron app — <code>node_modules</code>, Chromium, and a few hundred lines of JavaScript — clocks in between 80 and 150 megabytes compressed. The unpacked size is often over 200 megabytes. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.</p>
+<p>A minimal GPUI application, compiled in release mode with LTO (Link Time Optimization) enabled, typically lands between 10 and 15 megabytes on macOS and Windows, and slightly smaller on Linux. That is a factor of six to ten times smaller.</p>
+<p>Where does the difference come from? Electron ships a full web browser. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code. No hidden browser features.</p>
+<p>For a real-world example, consider a markdown previewer built with GPUI. The final binary, stripped of debug symbols and optimized for size, comes in around 8 megabytes. The same application built with Electron exceeds 90 megabytes.</p>
+<h3 id="build-pipeline"><a class="header" href="#build-pipeline">Build Pipeline</a></h3>
+<p>The simplest distribution pipeline for a GPUI application is <code>cargo build --release</code>. This produces a binary in <code>target/release/</code> that you can rename, sign, and bundle.</p>
+<pre><code class="language-bash">cargo build --release --target x86_64-pc-windows-msvc   # Windows
+cargo build --release --target x86_64-apple-darwin      # macOS Intel
+cargo build --release --target aarch64-apple-darwin     # macOS Apple Silicon
+cargo build --release --target x86_64-unknown-linux-gnu # Linux
+</code></pre>
+<p>For cross-compilation from a single machine, use <code>cargo cross</code>, which manages toolchain and linker configuration via Docker containers.</p>
+<pre><code class="language-bash">cargo cross build --release --target aarch64-apple-darwin
+</code></pre>
+<h3 id="code-signing-and-notarization"><a class="header" href="#code-signing-and-notarization">Code Signing and Notarization</a></h3>
+<p>Code signing is non-negotiable for distribution on macOS and Windows. Users expect applications that open without security warnings.</p>
+<p><strong>On macOS:</strong> You need an Apple Developer ID certificate. Sign the binary with <code>codesign</code>, then submit it to Apple for notarization using <code>xcrun notarytool</code>. GPUI’s binary is signed like any other executable — no framework-specific steps required.</p>
+<pre><code class="language-bash">codesign --force --options runtime --sign "Developer ID Application: Your Name" myapp
+ditto -c -k --keepParent myapp.app myapp.zip
+xcrun notarytool submit myapp.zip --apple-id your@email.com --team-id TEAMID --wait
+</code></pre>
+<p><strong>On Windows:</strong> You need a code signing certificate from a trusted authority. Sign the executable with <code>signtool</code>:</p>
+<pre><code class="language-bash">signtool sign /fd SHA256 /a /f mycert.pfx /p password myapp.exe
+</code></pre>
+<p><strong>On Linux:</strong> Code signing is less common, but you can distribute via package repositories that verify GPG signatures.</p>
+<h3 id="bundling-for-distribution"><a class="header" href="#bundling-for-distribution">Bundling for Distribution</a></h3>
+<p>Each platform expects applications in a specific format.</p>
+<p><strong>On macOS:</strong> A <code>.app</code> bundle is a directory structure with a fixed layout. GPUI does not require any special entries in <code>Info.plist</code> beyond the standard executable name and bundle identifier. Use <code>cargo-bundle</code> or write a simple script to create the bundle:</p>
+<pre><code>MyApp.app/
+└── Contents/
+    ├── Info.plist
+    ├── MacOS/
+    │   └── myapp
+    └── Resources/
+</code></pre>
+<p><strong>On Windows:</strong> A standalone <code>.exe</code> works, but users expect installers. Tools like <code>Inno Setup</code> or <code>WiX Toolset</code> can wrap your executable into a traditional installer. MSIX packaging is also an option for distribution through the Microsoft Store.</p>
+<p><strong>On Linux:</strong> Package formats vary by distribution. <code>.deb</code> for Debian/Ubuntu, <code>.rpm</code> for Fedora/RHEL, and AppImage for distribution-agnostic portable binaries. AppImage is the simplest cross-distribution option: it bundles the executable and its dependencies into a single file that runs on any Linux system.</p>
+<h3 id="fork-specific-distribution-considerations"><a class="header" href="#fork-specific-distribution-considerations">Fork-Specific Distribution Considerations</a></h3>
+<p>If you built your application on a fork, distribution may change.</p>
+<p><strong>WGPUI</strong> uses the same binary pipeline as upstream GPUI. No additional steps required.</p>
+<p><strong>Kael</strong> includes additional dependencies for media playback, networking, and system tray integration. These may pull in platform-specific dynamic libraries. If you distribute as a single static binary, ensure those dependencies are linked statically or bundle them alongside your executable. Kael’s documentation provides the exact library list for each platform.</p>
+<p><strong>gpui-ce</strong> tracks upstream closely, so distribution is identical to upstream GPUI.</p>
+<p><strong>gpui-unofficial</strong> is a versioned mirror of upstream. No changes to distribution.</p>
+<h3 id="the-update-problem"><a class="header" href="#the-update-problem">The Update Problem</a></h3>
+<p>Electron has a built-in auto-updater. GPUI does not.</p>
+<p>If your application needs automatic updates, you must build that logic yourself. The pattern is straightforward: check a remote manifest on startup, download a new binary if available, replace the current executable, and relaunch. For signed binaries, verify the signature before replacement.</p>
+<p>Several Rust crates provide update infrastructure. <code>self_update</code> and <code>update-informer</code> are popular choices that integrate with GitHub Releases, Amazon S3, or custom servers. GPUI’s async system can drive the download and installation without blocking the UI.</p>
+<p>The trade-off is clear: you control the update experience, but you also own the implementation.</p>
+<h3 id="the-electron-comparison-finalized"><a class="header" href="#the-electron-comparison-finalized">The Electron Comparison, Finalized</a></h3>
+<div class="table-wrapper">
+<table>
+<thead>
+<tr><th>Metric</th><th>GPUI</th><th>Electron</th></tr>
+</thead>
+<tbody>
+<tr><td>Minimal binary size</td><td>8–15 MB</td><td>80–150 MB</td></tr>
+<tr><td>Memory overhead</td><td>Application only</td><td>Chromium + Node.js</td></tr>
+<tr><td>Startup time</td><td>Instant (0.1–0.3s)</td><td>Delayed (0.5–1.5s)</td></tr>
+<tr><td>Native feel</td><td>Full</td><td>Emulated</td></tr>
+<tr><td>Auto-updater</td><td>You build</td><td>Built-in</td></tr>
+<tr><td>Cross-platform UI consistency</td><td>Your responsibility</td><td>High (web standards)</td></tr>
+</tbody>
+</table>
+</div>
+<p>GPUI wins on size, speed, and native integration. Electron wins on out-of-the-box updates and web rendering consistency. Neither is universally better. The right choice depends on your application’s priorities.</p>
+<h3 id="final-checklist"><a class="header" href="#final-checklist">Final Checklist</a></h3>
+<p>Before shipping, verify:</p>
+<ul>
+<li><input disabled="" type="checkbox"> Release build compiles with <code>--release</code> and LTO enabled</li>
+<li><input disabled="" type="checkbox"> Binary is stripped of debug symbols (<code>strip</code> or <code>split-debuginfo</code>)</li>
+<li><input disabled="" type="checkbox"> Code signing is applied for macOS and Windows</li>
+<li><input disabled="" type="checkbox"> Bundling matches platform expectations (<code>.app</code>, <code>.exe</code>, <code>.deb</code>, or AppImage)</li>
+<li><input disabled="" type="checkbox"> Update mechanism is implemented or explicitly skipped</li>
+<li><input disabled="" type="checkbox"> Fork-specific dependencies are accounted for (Kael’s media libraries, etc.)</li>
+</ul>
+<h3 id="next-steps"><a class="header" href="#next-steps">Next Steps</a></h3>
+<p>Your application is now ready for users.</p>
+<p>But before you close this book, read the Epilogue. It answers the question you may still be asking: “Was this the right investment, given the fragmentation?” The answer is more hopeful than you might think.</p>
+<hr><div style="break-before: page; page-break-before: always;"></div>
+<h1 id="epilogue-the-lingua-franca-argument-1"><a href="#epilogue-the-lingua-franca-argument-1" class="header">Epilogue: The Lingua Franca Argument</a></h1>
+<h2 id="epilogue-the-lingua-franca-argument"><a class="header" href="#epilogue-the-lingua-franca-argument">Epilogue: The Lingua Franca Argument</a></h2>
+<p>You have read fourteen chapters, built at least one application, and navigated a fragmented ecosystem of forks, components, and missing primitives. The natural question now is: was this worth it?</p>
+<p>The answer depends on what you are betting on.</p>
+<p>If you bet on GPUI the framework — the specific crate from Zed Industries — you are betting on an editor-first tool that may never add custom shaders, transforms, or a headless primitives layer. That bet pays off only if your application looks like an editor.</p>
+<p>But if you bet on Rust the language, you have made a different bet entirely.</p>
+<h3 id="where-rust-is-heading"><a class="header" href="#where-rust-is-heading">Where Rust Is Heading</a></h3>
+<p>Rust is becoming the lingua franca of native application development. The borrow checker, once a barrier, is now recognized as the only sane way to manage memory without garbage collection. The type system enables UI patterns — like the entity-component architecture GPUI uses — that would be fragile or impossible in dynamic languages.</p>
+<p>The evidence is everywhere. Tauri lets you build webview-based apps with Rust backends. Slint and SixtyFPS provide declarative UI toolkits. Dioxus and Leptos bring React-like patterns to native rendering. And GPUI proves that a GPU-accelerated, native-feeling desktop framework can exist without a garbage collector.</p>
+<p>These frameworks will not converge on a single API. But they are converging on Rust as the implementation language. Learning GPUI teaches you patterns — entity management, subscription-based event propagation, async UI patterns — that transfer directly to other Rust UI frameworks.</p>
+<h3 id="why-this-investment-compounds"><a class="header" href="#why-this-investment-compounds">Why This Investment Compounds</a></h3>
+<p>The specific skills you have learned in this book are not GPUI trivia. They are Rust architecture patterns dressed in GPUI syntax.</p>
+<ul>
+<li><strong>The pure core pattern</strong> (Chapter 12) is not GPUI-specific. It applies to any framework where you want to separate domain logic from presentation.</li>
+<li><strong>Entity-based state management</strong> (using <code>Entity&lt;T&gt;</code> and <code>cx.notify()</code>) is how Dioxus handles state. It is how Leptos handles signals. It is the pattern Rust UI frameworks have converged on.</li>
+<li><strong>Subscription-based event propagation</strong> is how you build decoupled systems in any actor-like architecture.</li>
+<li><strong>The <code>WeakEntity</code> pattern</strong> for async safety (Chapter 3) is directly transferable to any framework with similar ownership semantics.</li>
+</ul>
+<p>You have learned Rust architecture, not just GPUI. That investment compounds regardless of which fork wins — or whether GPUI survives at all.</p>
+<h3 id="one-year-from-now"><a class="header" href="#one-year-from-now">One Year From Now</a></h3>
+<p>Where will the GPUI ecosystem be in a year? No one knows. But the forks provide insurance.</p>
+<p>If Zed continues to prioritize editor features, Kael or WGPUI or gpui-ce will absorb the community’s energy. The best parts of each fork will be shared. The custom shader API that Kael is designing will inform gpui-ce’s implementation. The wgpu backend that WGPUI built will eventually influence upstream.</p>
+<p>Fragmentation is not failure. It is the ecosystem learning which designs work. The forges that produce the best solutions will attract the most users. Consolidation will follow — not because someone decrees it, but because developers choose the tools that work.</p>
+<h3 id="the-final-trade"><a class="header" href="#the-final-trade">The Final Trade</a></h3>
+<p>You can wait for the perfect framework. You will wait forever.</p>
+<p>Or you can build with what exists, separate your domain logic from your UI, and remain portable across frameworks. That is what this book has taught. Your business logic is pure Rust. Your UI is a thin wrapper. When the ecosystem shifts — and it will — you rewrite the wrapper. The core remains.</p>
+<p>That is the lingua franca argument. Rust is the constant. GPUI is one expression of it. Learn the patterns, not the incantations. Build the product, not the framework tribute.</p>
+<p>And ship.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-09f2665d.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-c22b7243.js"></script>
+
+        <!-- Custom JS scripts -->
+
+        <script>
+        window.addEventListener('load', function() {
+            window.setTimeout(window.print, 100);
+        });
+        </script>
+
+
+    </div>
+    </body>
+</html>
