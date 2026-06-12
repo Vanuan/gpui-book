@@ -11,12 +11,20 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 This installs `rustc` (the compiler) and `cargo` (the package manager — think npm, but for Rust). One command, no separate installs, no PATH archaeology. When it's done, create your first project:
 
 ```bash
-cargo new gpui_hello
+# A tool to create starter project
+
+cargo install cargo-generate --lock
+
+# cargo new gpui_hello
+
 cd gpui_hello
 cargo add gpui
 ```
 
+> `cargo add gpui` pulls in the GPUI framework and everything it depends on. (Curious what to expect from Cargo's dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)
+
 `cargo new` is your `npm init`. `cargo add gpui` pulls in the GPUI framework and everything it depends on. Open `src/main.rs`, delete what's there, and paste this:
+
 
 ```rust
 use gpui::*;

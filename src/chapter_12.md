@@ -90,6 +90,10 @@ Cargo enforces the boundary. You cannot accidentally import GPUI into your domai
 
 ---
 
+> **Tip:** As your workspace grows and you add community crates beyond `serde` and `thiserror`, you'll encounter Rust's `0.x` versioning conventions — which work differently than you might expect from `npm` or `pip`. Appendix B covers the two rules worth knowing before they bite you.
+
+---
+
 **The Domain: An Example**
 
 Let's build a markdown previewer. The domain crate:
