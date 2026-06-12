@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Chapter 6: Focus and Actions - Rust and GPUI: Native Apps for the Rest of Us</title>
+        <title>Appendix B: The Cargo Expectation Gap - Rust and GPUI: Native Apps for the Rest of Us</title>
 
 
         <!-- Custom HTML head -->
@@ -177,99 +177,46 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="chapter-6-focus-and-actions"><a class="header" href="#chapter-6-focus-and-actions">Chapter 6: Focus and Actions</a></h2>
-<p>You can now draw anything to the screen. The next question is how your application responds to the keyboard — and this is where GPUI introduces a distinction that feels unfamiliar at first but turns out to be one of its best ideas.</p>
-<p>In GPUI, mouse events and keyboard events are handled through entirely different systems, and deliberately so.</p>
-<hr>
-<p><strong>The Semantic Divide</strong></p>
-<p>Mouse events are positional. When you click, GPUI finds the hitbox registered during prepaint and triggers the corresponding <code>.on_click()</code> handler. The location of the cursor determines everything.</p>
-<p>Keyboard events are contextual. When a user presses <code>Cmd+S</code>, the cursor position is irrelevant. What matters is which part of the application currently has the user’s attention. Is the user working in a text editor? Save the file. Are they in a settings panel? Save the preferences. The same keypress, two completely different meanings depending on context.</p>
-<p>GPUI models this context through a focus system and a routing layer called Actions. Together they replace the pattern of attaching <code>onKeyDown</code> listeners to elements and checking which mode the app is currently in.</p>
-<hr>
-<p><strong>Focus Management</strong></p>
-<p>To receive keyboard-driven input, an element must be part of the focus tree. GPUI manages this with <code>FocusHandle</code> — a token representing a specific element’s position in that tree.</p>
-<p>You create focus handles through the context and attach them to elements with <code>.track_focus()</code>:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use gpui::*;
-
-struct SplitPane {
-    left_focus: FocusHandle,
-    right_focus: FocusHandle,
-}
-
-impl SplitPane {
-    fn new(cx: &amp;mut Context&lt;Self&gt;) -&gt; Self {
-        Self {
-            left_focus: cx.focus_handle(),
-            right_focus: cx.focus_handle(),
-        }
-    }
-}
-
-impl Render for SplitPane {
-    fn render(&amp;mut self, _window: &amp;mut Window, cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
-        div()
-            .flex()
-            .size_full()
-            .child(
-                div()
-                    .track_focus(&amp;self.left_focus)
-                    .on_focus(cx.listener(|_, _, _, cx| println!("Left pane focused")))
-                    .w_1_2()
-                    .bg(rgb(0x1e1e1e))
-            )
-            .child(
-                div()
-                    .track_focus(&amp;self.right_focus)
-                    .w_1_2()
-                    .bg(rgb(0x2d3748))
-            )
-    }
-}
-<span class="boring">}</span></code></pre>
-<p><code>.track_focus()</code> registers the element with GPUI’s focus tree. To move focus programmatically — after a task completes, after a modal closes — call <code>self.right_focus.focus(window)</code>. The rest of the routing system follows automatically.</p>
-<hr>
-<p><strong>The Action System</strong></p>
-<p>With focus established, the question is how keypresses get connected to behavior. GPUI’s answer is Actions — pure semantic descriptions of intent defined with the <code>actions!</code> macro:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>actions!(workspace, [SaveFile, ClosePanel]);
-<span class="boring">}</span></code></pre>
-<p>These structs carry no logic. <code>SaveFile</code> just means “the user intends to save.” What saving actually does depends on which element catches the action and what context it’s in.</p>
-<p>Keystrokes are mapped to actions in a keymap configuration separate from your application code. <code>Cmd+S</code> maps to <code>workspace::SaveFile</code>. If a user wants to remap it, they change the keymap — nothing in your Rust code changes. The action name is the stable contract between input and behavior.</p>
-<hr>
-<p><strong>Action Routing: The Bubble</strong></p>
-<p>When the user presses a mapped keystroke, GPUI creates the corresponding action struct and injects it at whichever element currently holds focus. From there it bubbles up the element tree. Every element in the path has a chance to catch it with <code>.on_action()</code>:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>div()
-    .track_focus(&amp;self.left_focus)
-    .on_action(cx.listener(|this, _action: &amp;SaveFile, _window, cx| {
-        // Only reached if this pane or one of its children has focus
-        this.save(cx);
-        cx.notify();
-    }))
-<span class="boring">}</span></code></pre>
-<p>If no element in the active focus path handles the action, it drops silently at the root.</p>
-<p>This silent drop is a feature. Consider a <code>Delete</code> action mapped to <code>Backspace</code>. When the user is typing in a text input, the input catches <code>Delete</code>, removes a character, and stops the bubble. When the user clicks into a file explorer and presses <code>Backspace</code>, the text input is no longer in the focus path — it never sees the action. The file explorer catches it instead and moves a file to trash.</p>
-<p>No global mode tracking. No <code>if currentFocus === 'editor'</code> conditionals. The structure of the focus tree is the routing logic.</p>
-<hr>
-<p><strong>What’s Next</strong></p>
-<p>You can draw anything and route user intent precisely where it belongs. The remaining question is time — what happens when handling an action triggers work that takes a while? Saving to a slow disk, fetching from a network, parsing a large file. Doing that work inside an action handler will freeze the UI.</p>
-<p>Chapter 7 covers GPUI’s async engine: how to move heavy work off the UI thread, how to get results back safely, and how the <code>WeakEntity</code> pattern from Chapter 3 becomes essential in practice.</p>
+                        <h2 id="appendix-b-the-cargo-expectation-gap"><a class="header" href="#appendix-b-the-cargo-expectation-gap">Appendix B: The Cargo Expectation Gap</a></h2>
+<p>In Chapter 1, we made a promise: <code>cargo add gpui</code> pulls in the framework and everything it depends on, with one command and no PATH archaeology.</p>
+<p>If you are coming to Rust from C++, you likely read that, ran the command, and felt a profound sense of relief. You have escaped a decades-long purgatory of Makefiles, CMake lists, missing headers, and cryptic linker errors. To you, Cargo feels like magic.</p>
+<p>If you are coming to Rust from TypeScript, Ruby, or Python, you likely read that same sentence and shrugged. Your baseline is <code>npm</code>, <code>bundler</code>, or <code>pip</code>. Your ecosystem solved “one command to install” years ago. To you, Cargo isn’t magic; it is the bare minimum expectation of a modern language.</p>
+<p>This appendix is primarily for the TypeScript and high-level language engineers. Because if your baseline is <code>npm</code>, you are eventually going to run <code>cargo build</code> on a new project, watch it pull down 250 transitive dependencies, wait several minutes for a clean compile, and hit a version conflict between two crates. When that happens, you might wonder if Chapter 1 oversold the Rust experience.</p>
+<p>We didn’t. But your experience of Cargo depends entirely on the ecosystem you left behind. Here is the honest map of why Cargo behaves the way it does, and a few essential survival rules for operating it.</p>
+<h3 id="the-micro-crate-reality"><a class="header" href="#the-micro-crate-reality">The “Micro-Crate” Reality</a></h3>
+<p>Languages like Go, Python, and JavaScript are “batteries included.” If you want to parse JSON, generate a random number, or make an HTTP request, it is either built into the language or provided by a massive, centralized standard library.</p>
+<p>Rust’s core team made a different philosophical choice: the standard library must remain lean, stable forever, and capable of running on embedded microcontrollers.</p>
+<p>The result is the micro-crate ecosystem. In Rust, you have to pull in a dependency for almost everything.</p>
+<p>JSON serialization needs <code>serde</code>. Random numbers need <code>rand</code>. Time and dates need <code>chrono</code>. HTTP requests need <code>reqwest</code>.</p>
+<p>To see the difference, look at making a simple HTTP request. In a modern TypeScript environment, <code>fetch</code> is just there. In Rust, adding the <code>reqwest</code> crate doesn’t just add one library; it pulls in an async runtime, an HTTP parser, a TLS library, and their respective dependencies. Suddenly, your <code>Cargo.toml</code> requires dozens of community crates just to stitch together basic functionality.</p>
+<h3 id="you-are-compiling-the-world"><a class="header" href="#you-are-compiling-the-world">You Are Compiling the World</a></h3>
+<p>When you run <code>npm install</code>, you are mostly downloading pre-compiled JavaScript files. When you use Java’s Maven, you download pre-built JARs.</p>
+<p>Cargo downloads <strong>source code</strong> and compiles it all locally on your machine.</p>
+<p>This is where the friction hits. The dependency management is clean on paper, but the build process exposes you to the harsh realities of systems programming. If one of your 200 dependencies relies on a C library that isn’t on your system, the build fails. You are trading the convenience of pre-compiled binaries for absolute control over optimization, memory layout, and target architecture.</p>
+<h3 id="gpui-and-the-async-question"><a class="header" href="#gpui-and-the-async-question">GPUI and the Async Question</a></h3>
+<p>Because Rust’s standard library is so barebones, the community had to build the infrastructure for async programming themselves. Historically, this led to deep ecosystem rifts — most notably the split between the <code>tokio</code> and <code>async-std</code> runtimes. In standard Rust backend development, pulling in a library built for the “wrong” runtime can result in a cascading tangle of incompatible dependencies.</p>
+<p>GPUI helps here, but it’s worth being precise about how much. When you use <code>cx.spawn()</code> or <code>cx.background_spawn()</code>, you’re using GPUI’s own integrated executor — you don’t need to set up a <code>tokio</code> runtime just to make your UI’s async code work. For the async patterns covered in this book — file loading, background tasks, animations — GPUI’s concurrency model is self-contained.</p>
+<p>What GPUI doesn’t do is shield you from runtime requirements introduced by <em>other</em> dependencies. If you add <code>reqwest</code> for networking, it brings its own runtime expectations regardless of what GPUI uses internally. The historical rift doesn’t disappear — but for the core of your application, GPUI gives you a working concurrency model without forcing that choice on you up front.</p>
+<h3 id="the-ecosystem-survival-guide"><a class="header" href="#the-ecosystem-survival-guide">The Ecosystem Survival Guide</a></h3>
+<p>Cargo is a remarkably stable tool, but it carries the baggage of decisions made in a very different era of package management. If you remember the early, fragile days of <code>Gemfile.lock</code> or <code>package-lock.json</code>, you already possess the intuition to avoid Cargo’s two biggest footguns.</p>
+<p><strong>Survival Rule 1: Always use <code>--locked</code> for binaries.</strong></p>
+<p>When you install a tool globally using <code>cargo install &lt;tool&gt;</code>, Cargo ignores the package’s <code>Cargo.lock</code> file by default. It recomputes the dependency tree on the fly. Historically, the idea was that installed binaries should automatically get compatible bug fixes and security patches. In reality, it means your installation is held hostage by whichever transitive dependency pushed a broken update in the last 24 hours. Always run <code>cargo install &lt;tool&gt; --locked</code> to ensure a reproducible build that matches what the author actually tested.</p>
+<p><strong>Survival Rule 2: Tightly pin volatile <code>0.x</code> crates.</strong></p>
+<p>Cargo enforces Semantic Versioning strictly. If your <code>Cargo.toml</code> asks for version <code>0.3.1</code>, Cargo will safely allow updates up to, but not including, <code>0.4.0</code>. However, the Rust ecosystem has a culture of extreme hesitation around publishing a <code>1.0</code>. Crates will sit in <code>0.x</code> — which officially means “initial development” — for years. Many maintainers treat this as a perpetual beta where any patch release is fair game for breaking API changes. If a <code>0.x</code> crate breaks your build, tighten your <code>Cargo.toml</code> to demand an exact version: <code>=0.3.1</code>.</p>
+<h3 id="the-mitigation-why-chapter-12-matters"><a class="header" href="#the-mitigation-why-chapter-12-matters">The Mitigation: Why Chapter 12 Matters</a></h3>
+<p>Cargo’s strictness — specifically how it treats two different versions of the same crate as entirely different, incompatible types — can make large dependency trees brittle.</p>
+<p>This is the exact reason Chapter 12’s Pure Core Pattern is not just academic architecture. It is a practical defense mechanism.</p>
+<p>By keeping your business logic in a <code>domain</code> crate that knows nothing about GPUI, <code>reqwest</code>, or system-level dependencies, you isolate your application from Cargo’s friction. Your <code>domain</code> crate compiles quickly, and its tests run in milliseconds. Its <code>Cargo.toml</code> has only a handful of fundamental data-structuring crates.</p>
+<p>You let the UI crate deal with the massive dependency trees, the framework updates, and the platform-specific build times. Your core logic stays fast, testable, and largely unaffected by the churn of the ecosystem.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="chapter_5.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="appendix_a.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="chapter_7.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -277,13 +224,10 @@ impl Render for SplitPane {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="chapter_5.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="appendix_a.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="chapter_7.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>

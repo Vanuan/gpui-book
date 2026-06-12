@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-74039e40.js";
+            window.path_to_searchindex_js = "searchindex-093c5abd.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a483e324.js"></script>
+        <script src="toc-a268ef12.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -241,6 +241,10 @@ thiserror.workspace = true
 # No gpui here — enforced by Cargo
 </code></pre>
 <p>Cargo enforces the boundary. You cannot accidentally import GPUI into your domain crate — it simply isn’t in the dependency graph.</p>
+<hr>
+<blockquote>
+<p><strong>Tip:</strong> As your workspace grows and you add community crates beyond <code>serde</code> and <code>thiserror</code>, you’ll encounter Rust’s <code>0.x</code> versioning conventions — which work differently than you might expect from <code>npm</code> or <code>pip</code>. Appendix B covers the two rules worth knowing before they bite you.</p>
+</blockquote>
 <hr>
 <p><strong>The Domain: An Example</strong></p>
 <p>Let’s build a markdown previewer. The domain crate:</p>

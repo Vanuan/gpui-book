@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-74039e40.js";
+            window.path_to_searchindex_js = "searchindex-093c5abd.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a483e324.js"></script>
+        <script src="toc-a268ef12.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -183,10 +183,18 @@
 <pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 </code></pre>
 <p>This installs <code>rustc</code> (the compiler) and <code>cargo</code> (the package manager — think npm, but for Rust). One command, no separate installs, no PATH archaeology. When it’s done, create your first project:</p>
-<pre><code class="language-bash">cargo new gpui_hello
+<pre><code class="language-bash"># A tool to create starter project
+
+cargo install cargo-generate --lock
+
+# cargo new gpui_hello
+
 cd gpui_hello
 cargo add gpui
 </code></pre>
+<blockquote>
+<p><code>cargo add gpui</code> pulls in the GPUI framework and everything it depends on. (Curious what to expect from Cargo’s dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)</p>
+</blockquote>
 <p><code>cargo new</code> is your <code>npm init</code>. <code>cargo add gpui</code> pulls in the GPUI framework and everything it depends on. Open <code>src/main.rs</code>, delete what’s there, and paste this:</p>
 <pre class="playground"><code class="language-rust">use gpui::*;
 

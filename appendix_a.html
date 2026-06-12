@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Chapter 6: Focus and Actions - Rust and GPUI: Native Apps for the Rest of Us</title>
+        <title>Appendix A: GPUI&#x27;s Origins — The Zed Interview and What It Reveals - Rust and GPUI: Native Apps for the Rest of Us</title>
 
 
         <!-- Custom HTML head -->
@@ -177,97 +177,70 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="chapter-6-focus-and-actions"><a class="header" href="#chapter-6-focus-and-actions">Chapter 6: Focus and Actions</a></h2>
-<p>You can now draw anything to the screen. The next question is how your application responds to the keyboard — and this is where GPUI introduces a distinction that feels unfamiliar at first but turns out to be one of its best ideas.</p>
-<p>In GPUI, mouse events and keyboard events are handled through entirely different systems, and deliberately so.</p>
+                        <h1 id="appendix-a-gpuis-origins--the-zed-interview-and-what-it-reveals"><a class="header" href="#appendix-a-gpuis-origins--the-zed-interview-and-what-it-reveals">Appendix A: GPUI’s Origins — The Zed Interview and What It Reveals</a></h1>
+<p>This appendix is optional. Chapter 8 gave you the practical takeaways. Here’s the primary source material behind those claims — drawn from a conversation with Nathan Ball, co-founder of Zed Industries.</p>
 <hr>
-<p><strong>The Semantic Divide</strong></p>
-<p>Mouse events are positional. When you click, GPUI finds the hitbox registered during prepaint and triggers the corresponding <code>.on_click()</code> handler. The location of the cursor determines everything.</p>
-<p>Keyboard events are contextual. When a user presses <code>Cmd+S</code>, the cursor position is irrelevant. What matters is which part of the application currently has the user’s attention. Is the user working in a text editor? Save the file. Are they in a settings panel? Save the preferences. The same keypress, two completely different meanings depending on context.</p>
-<p>GPUI models this context through a focus system and a routing layer called Actions. Together they replace the pattern of attaching <code>onKeyDown</code> listeners to elements and checking which mode the app is currently in.</p>
+<h2 id="the-origin"><a class="header" href="#the-origin">The Origin</a></h2>
+<p>GPUI wasn’t born as a general-purpose framework. It was extracted from Zed.</p>
+<p>The original 2018 architecture had GPUI 1 spitting JSON at an Electron shell — Zed’s first UI was an Electron app launching a Rust binary. From there, GPUI 1 went through phases: a Pathfinder renderer, a Flutter-inspired layout system (constraints down, sizes up), and a split between Rust code and JSON/TypeScript themes. The team later admitted that split worked poorly in practice.</p>
+<p>By late 2023, the team was paralyzed. Every time they wanted to add collaboration features, the same question came up: how do you build this? The honest answer was that they didn’t have a good workflow. Building UI had become frustrating and miserable.</p>
+<p>The catalyst was a contract designer who couldn’t make any progress in the old framework.</p>
 <hr>
-<p><strong>Focus Management</strong></p>
-<p>To receive keyboard-driven input, an element must be part of the focus tree. GPUI manages this with <code>FocusHandle</code> — a token representing a specific element’s position in that tree.</p>
-<p>You create focus handles through the context and attach them to elements with <code>.track_focus()</code>:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>use gpui::*;
-
-struct SplitPane {
-    left_focus: FocusHandle,
-    right_focus: FocusHandle,
-}
-
-impl SplitPane {
-    fn new(cx: &amp;mut Context&lt;Self&gt;) -&gt; Self {
-        Self {
-            left_focus: cx.focus_handle(),
-            right_focus: cx.focus_handle(),
-        }
-    }
-}
-
-impl Render for SplitPane {
-    fn render(&amp;mut self, _window: &amp;mut Window, cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
-        div()
-            .flex()
-            .size_full()
-            .child(
-                div()
-                    .track_focus(&amp;self.left_focus)
-                    .on_focus(cx.listener(|_, _, _, cx| println!("Left pane focused")))
-                    .w_1_2()
-                    .bg(rgb(0x1e1e1e))
-            )
-            .child(
-                div()
-                    .track_focus(&amp;self.right_focus)
-                    .w_1_2()
-                    .bg(rgb(0x2d3748))
-            )
-    }
-}
-<span class="boring">}</span></code></pre>
-<p><code>.track_focus()</code> registers the element with GPUI’s focus tree. To move focus programmatically — after a task completes, after a modal closes — call <code>self.right_focus.focus(window)</code>. The rest of the routing system follows automatically.</p>
+<h2 id="the-rewrite"><a class="header" href="#the-rewrite">The Rewrite</a></h2>
+<p>The rewrite took four months, from late October to December 2023. The team froze GPUI 1 and built GPUI 2 in parallel. They were never worried that the rewrite itself was a bad idea — the real risk was organizational, coordinating the switch without breaking everything.</p>
+<p>The rewrite had three goals. First, unidirectional flow — model code should never be aware of view code. Second, a Flexbox-inspired DSL where you can just write div and child. Third, type safety — previously, pixels were just f32s with no type distinction, leading to silent rendering bugs.</p>
+<p>The result solved the problem they set out to solve: building views went from painful to painless.</p>
 <hr>
-<p><strong>The Action System</strong></p>
-<p>With focus established, the question is how keypresses get connected to behavior. GPUI’s answer is Actions — pure semantic descriptions of intent defined with the <code>actions!</code> macro:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>actions!(workspace, [SaveFile, ClosePanel]);
-<span class="boring">}</span></code></pre>
-<p>These structs carry no logic. <code>SaveFile</code> just means “the user intends to save.” What saving actually does depends on which element catches the action and what context it’s in.</p>
-<p>Keystrokes are mapped to actions in a keymap configuration separate from your application code. <code>Cmd+S</code> maps to <code>workspace::SaveFile</code>. If a user wants to remap it, they change the keymap — nothing in your Rust code changes. The action name is the stable contract between input and behavior.</p>
+<h2 id="the-open-source-decision"><a class="header" href="#the-open-source-decision">The Open Source Decision</a></h2>
+<p>The team followed a strict sequence: rewrite, stabilize, then open source. Doing a major rewrite after open sourcing would have created too much chaos.</p>
+<p>On quality: Nathan describes himself as an unapologetic perfectionist. Beauty matters. The code is now public, so it’s part of what he’s expressing to the world. It needs to be good.</p>
 <hr>
-<p><strong>Action Routing: The Bubble</strong></p>
-<p>When the user presses a mapped keystroke, GPUI creates the corresponding action struct and injects it at whichever element currently holds focus. From there it bubbles up the element tree. Every element in the path has a chance to catch it with <code>.on_action()</code>:</p>
-<pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>div()
-    .track_focus(&amp;self.left_focus)
-    .on_action(cx.listener(|this, _action: &amp;SaveFile, _window, cx| {
-        // Only reached if this pane or one of its children has focus
-        this.save(cx);
-        cx.notify();
-    }))
-<span class="boring">}</span></code></pre>
-<p>If no element in the active focus path handles the action, it drops silently at the root.</p>
-<p>This silent drop is a feature. Consider a <code>Delete</code> action mapped to <code>Backspace</code>. When the user is typing in a text input, the input catches <code>Delete</code>, removes a character, and stops the bubble. When the user clicks into a file explorer and presses <code>Backspace</code>, the text input is no longer in the focus path — it never sees the action. The file explorer catches it instead and moves a file to trash.</p>
-<p>No global mode tracking. No <code>if currentFocus === 'editor'</code> conditionals. The structure of the focus tree is the routing logic.</p>
+<h2 id="the-license-split-apache-vs-gpl"><a class="header" href="#the-license-split-apache-vs-gpl">The License Split: Apache vs GPL</a></h2>
+<p>GPUI and Zed live in the same repository but under different licenses. This matters when you’re deciding what code you can legally reuse.</p>
+<p><strong>GPUI is Apache 2.0.</strong> The framework — the <code>gpui</code> crate and its core primitives — uses Apache License, Version 2.0. This is a permissive license. You can use GPUI to build commercial desktop applications and distribute them under any license you choose. The Apache 2.0 license grants you a perpetual, worldwide, royalty-free copyright license to reproduce, prepare derivative works, and distribute the work.</p>
+<p><strong>Zed the editor is GPL v3.</strong> The editor’s source code — features like the workspace, dock, pane, scrollbar, picker, and title bar — falls under GPL version 3. Server-side components use AGPL. The copyleft license ensures that any improvements to the editor itself must be shared back with the community.</p>
+<p><strong>The boundary is enforced.</strong> A developer once asked permission to extract Zed’s dock, scrollbar, picker, and title bar components for use in a commercial GPUI project. The response from the Zed team was clear: taking those crates wholesale and relicensing them would violate the GPL, and they couldn’t legally permit it. Those components are built specifically for Zed, not intended for reuse outside the editor.</p>
+<p><strong>What this means for you.</strong> You can freely use GPUI itself. Build your app, ship it, keep it closed source if you want. But if you copy code from Zed’s GPL-licensed crates — anything from <code>workspace</code>, <code>ui</code>, or editor-specific components — your project becomes subject to the GPL. The team has plans for a more general-purpose component library under a permissive license someday, but right now, the focus is Zed.</p>
+<p>The practical rule: stick to the <code>gpui</code> crate and your own code. Admire Zed’s architecture, don’t copy its GPL’d implementation.</p>
 <hr>
-<p><strong>What’s Next</strong></p>
-<p>You can draw anything and route user intent precisely where it belongs. The remaining question is time — what happens when handling an action triggers work that takes a while? Saving to a slow disk, fetching from a network, parsing a large file. Doing that work inside an action handler will freeze the UI.</p>
-<p>Chapter 7 covers GPUI’s async engine: how to move heavy work off the UI thread, how to get results back safely, and how the <code>WeakEntity</code> pattern from Chapter 3 becomes essential in practice.</p>
+<h2 id="what-this-reveals"><a class="header" href="#what-this-reveals">What This Reveals</a></h2>
+<p>Four truths about GPUI today:</p>
+<p><strong>One — it’s editor-first, not community-first.</strong> The roadmap serves Zed. That’s focus, not hostility, but it’s a constraint you must accept if you build on upstream.</p>
+<p><strong>Two — the rewrite was about workflow, not features.</strong> GPUI 2 fixed painful UI development. It did not add custom shaders, transforms, or general-purpose graphics. Those gaps exist because Zed doesn’t need them.</p>
+<p><strong>Three — open source was an afterthought.</strong> GPUI is an editor’s internal framework that happens to be open source, not an open source project that happens to have an editor. This matters when you’re betting on it.</p>
+<p><strong>Four — quality is real.</strong> Nathan’s perfectionism means thoughtful architecture. It also means features that don’t meet his standards — or don’t serve Zed — may never arrive.</p>
+<hr>
+<h2 id="the-missing-text-input"><a class="header" href="#the-missing-text-input">The Missing Text Input</a></h2>
+<p>GPUI does not ship a text input component. This surprises everyone. Zed is a text editor. How can its own framework lack basic text input?</p>
+<p>The answer reveals how GPUI works in practice.</p>
+<p>GPUI provides the rendering and event primitives: keyboard routing, focus management, cursor rendering, and basic shapes. What it does not provide is the text storage, selection logic, IME handling, or undo/redo stack. Those live in Zed’s <code>text</code> crate — Rope-based, with sum tree architecture for performance.</p>
+<p>Inside Zed, the boundary between “framework” and “editor” is blurry. The text stack is editor code that happens to share a repository with framework code. It was never extracted, documented, or stabilized as a public API.</p>
+<p>As a result, you have three options:</p>
+<p><strong>One:</strong> Copy from Zed. The <code>ui_input</code> crate contains <code>SingleLineInput</code> and <code>MultiLineInput</code>. The code is there. The team won’t stop you. But it’s not versioned, not documented, and may break. And remember the license — copying from Zed’s GPL’d crates puts your project under GPL.</p>
+<p><strong>Two:</strong> Use <code>gpui-component</code> from the Longbridge trading platform. It provides <code>Input</code> with <code>InputState</code>, <code>InputMode::PlainText</code>, selection, history, and rendering. This is the most complete off-the-shelf solution, but it carries the rest of that library’s opinions.</p>
+<p><strong>Three:</strong> Build from GPUI primitives. Keyboard events, focus, and cursor rendering are in the framework. Add <code>ropey</code> for text storage, wire selection and IME yourself. Chapter 11 walks through exactly this. Your code stays under your own license.</p>
+<p>The absence isn’t a technical gap. It’s a priority gap. Zed doesn’t need a standalone text input — it has an <code>Editor</code> that does syntax highlighting, multi-cursor, and LSP. Extracting the simple case is work with no direct benefit to the product. The editor-first constraint in action.</p>
+<hr>
+<h2 id="what-this-does-not-mean"><a class="header" href="#what-this-does-not-mean">What This Does Not Mean</a></h2>
+<p>No licensing hostility. The team chose Apache for GPUI specifically so others could build commercial applications. The GPL on Zed itself is standard for open source editors.</p>
+<p>No abandonment. Active maintenance continues — witness the February 2026 PR reimplementing the Linux renderer with wgpu.</p>
+<p>No universal warning label. GPUI is optimized for editor-shaped problems. If your project looks like an editor — data-heavy, text-heavy, performance-sensitive — you’re in the right place. If it looks like a game or creative tool, you’re not.</p>
+<hr>
+<h2 id="how-to-use-this"><a class="header" href="#how-to-use-this">How To Use This</a></h2>
+<p>When you hit a missing feature, you now understand <em>why</em>. That tells you whether to work around it, contribute upstream, or fork.</p>
+<p>When you evaluate a long-term bet, you now understand the incentives. Upstream serves Zed first. That means faster, more reliable text and data — but no custom shaders or transforms anytime soon.</p>
+<p>When you read GitHub discussions or contribute, you now understand the team’s perspective. Contributions that help Zed are welcome. Contributions that don’t are lower priority.</p>
+<p>When you look at Zed’s source for inspiration, you now understand the legal boundary. Learn from the architecture. Don’t copy the GPL’d code.</p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="chapter_5.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="epilogue.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="chapter_7.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="appendix_b.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                             </a>
 
@@ -277,11 +250,11 @@ impl Render for SplitPane {
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="chapter_5.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="epilogue.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="chapter_7.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="appendix_b.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
                     </a>
             </nav>
