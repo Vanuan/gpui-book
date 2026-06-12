@@ -29,3 +29,6 @@
 - [Chapter 14: Distribution](chapter_14.md)
 
 [Epilogue: The Lingua Franca Argument](epilogue.md)
+
+[Appendix A: GPUI's Origins — The Zed Interview and What It Reveals](appendix_a.md)
+[Appendix B: The Cargo Expectation Gap](appendix_b.md)
