@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-73db92df.js";
+            window.path_to_searchindex_js = "searchindex-f6de7e08.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2064380b.js"></script>
@@ -212,31 +212,7 @@ cargo run
 <blockquote>
 <p><code>cargo install cargo-gpui --locked</code> install the binary cargo-gpui, so that it gives you <code>cargo gpui</code> subcommand. <code>cargo gpui new</code> will generate <code>Cargo.toml</code> and other template files. <code>cargo run</code> will install the dependencies in <code>Cargo.toml</code>, execute <code>cargo build</code> and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo’s dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)</p>
 </blockquote>
-<p><code>cargo gpui new</code> is your <code>npm init</code>. It pulls in the GPUI framework and everything it depends on. It also provides a starter <code>main.rs</code> suitable for that backend. Open <code>src/main.rs</code>, delete what’s there, and paste this:</p>
-<pre class="playground"><code class="language-rust">use gpui::*;
-
-struct HelloWorld;
-
-impl Render for HelloWorld {
-    fn render(&amp;mut self, _window: &amp;mut Window, _cx: &amp;mut Context&lt;Self&gt;) -&gt; impl IntoElement {
-        div()
-            .flex()
-            .size_full()
-            .justify_center()
-            .items_center()
-            .bg(rgb(0x2d3748))
-            .text_color(rgb(0xffffff))
-            .child("Hello, GPUI!")
-    }
-}
-
-fn main() {
-    App::new().run(|cx: &amp;mut App| {
-        cx.open_window(WindowOptions::default(), |_, cx| {
-            cx.new(|_| HelloWorld)
-        });
-    });
-}</code></pre>
+<p><code>cargo gpui new</code> is your <code>npm init</code>. It pulls in the GPUI framework and everything it depends on. It also provides a starter <code>main.rs</code> suitable for that backend.</p>
 <p>Run it:</p>
 <pre><code class="language-bash">cargo run
 </code></pre>
@@ -244,7 +220,10 @@ fn main() {
 <hr>
 <p><strong>What Just Happened</strong></p>
 <p>If you’re coming from the web world, those twenty lines will feel surprisingly familiar.</p>
-<p><code>App::new().run()</code> is your <code>ReactDOM.render()</code>. It initializes the application, hooks into your operating system’s native event loop, and hands control to the closure — the <code>|cx: &amp;mut App| { ... }</code> block — where you set up your windows before the loop starts.</p>
+<blockquote>
+<p>Depending on the fork you selected and the version you chose, there might be some differences in API. But here’s the major difference: <code>gpui_platform</code> contains <code>application()</code> factory that creates the app context. Earlier versions or other forks might recommend <code>App::new()</code></p>
+</blockquote>
+<p><code>application().run()</code> is your <code>ReactDOM.render()</code>. It initializes the application, hooks into your operating system’s native event loop, and hands control to the closure — the <code>|cx: &amp;mut App| { ... }</code> block — where you set up your windows before the loop starts.</p>
 <p><code>cx.open_window()</code> asks the operating system for a literal window frame. The <code>cx</code> here is a <em>context object</em> — you’ll see it everywhere in GPUI. It’s your handle into the framework’s runtime, the thing you talk to when you want GPUI to do something on your behalf.</p>
 <p><code>HelloWorld</code> is your root component. Right now it’s an empty struct — just a named type with no data — but it’s about to become the home for your application state.</p>
 <p><code>impl Render for HelloWorld</code> is your component’s render method. Whenever the screen needs to update, GPUI calls this function and asks: what should I draw right now? You return a description of the UI — not pixels directly, but a blueprint — and GPUI handles the rest.</p>
