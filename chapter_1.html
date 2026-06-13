@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-f6de7e08.js";
+            window.path_to_searchindex_js = "searchindex-e15864ca.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2064380b.js"></script>
@@ -203,12 +203,13 @@ cargo run
 </code></pre>
 <p>The first build takes a minute — Rust is compiling GPUI and its dependencies from source, something that happens once and then caches. After that, a native window appears on your screen with “Hello, GPUI!” centered on a dark background. No Electron wrapper. No local web server. No Chromium. Native pixels, drawn directly by your GPU.</p>
 <hr>
-<p><strong>What Just Happened</strong></p>
-<p>If you’re coming from the web world, those twenty lines will feel surprisingly familiar.</p>
+<p><strong>What’s in the code</strong></p>
+<p>Open the <code>main.rs</code> in the editor.</p>
+<p>If you’re coming from the web world, some lines will feel surprisingly familiar.</p>
+<p><code>application().run()</code> is your <code>ReactDOM.render()</code>. It initializes the application, hooks into your operating system’s native event loop, and hands control to the closure — the <code>|cx: &amp;mut App| { ... }</code> block — where you set up your windows before the loop starts.</p>
 <blockquote>
 <p>Depending on the fork you selected and the version you chose, there might be some differences in API. But here’s the major difference: <code>gpui_platform</code> contains <code>application()</code> factory that creates the app context. Earlier versions or other forks might recommend <code>App::new()</code></p>
 </blockquote>
-<p><code>application().run()</code> is your <code>ReactDOM.render()</code>. It initializes the application, hooks into your operating system’s native event loop, and hands control to the closure — the <code>|cx: &amp;mut App| { ... }</code> block — where you set up your windows before the loop starts.</p>
 <p><code>cx.open_window()</code> asks the operating system for a literal window frame. The <code>cx</code> here is a <em>context object</em> — you’ll see it everywhere in GPUI. It’s your handle into the framework’s runtime, the thing you talk to when you want GPUI to do something on your behalf.</p>
 <p><code>HelloWorld</code> is your root component. Right now it’s an empty struct — just a named type with no data — but it’s about to become the home for your application state.</p>
 <p><code>impl Render for HelloWorld</code> is your component’s render method. Whenever the screen needs to update, GPUI calls this function and asks: what should I draw right now? You return a description of the UI — not pixels directly, but a blueprint — and GPUI handles the rest.</p>
