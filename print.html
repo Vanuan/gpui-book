@@ -36,10 +36,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-093c5abd.js";
+            window.path_to_searchindex_js = "searchindex-566caf01.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a268ef12.js"></script>
+        <script src="toc-2064380b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -1444,6 +1444,9 @@ mod tests {
 <p>On macOS, you can enable native titlebar styling with <code>window.set_titlebar_appears_transparent()</code> or hide it entirely with <code>window.set_titlebar_hidden()</code>. When hidden, you become responsible for draggable regions — use <code>.on_drag()</code> on your custom titlebar element to allow window movement.</p>
 <p>On Windows and Linux, titlebar behavior is more constrained. Upstream GPUI provides basic titlebar configuration, but deep customization often requires platform-specific code or a fork. WGPUI, for example, offers more consistent titlebar handling across all three platforms due to its unified winit backend.</p>
 <p>The practical rule: for custom titlebars on macOS, use GPUI’s native APIs. For cross-platform custom titlebars, test each target or consider a fork like WGPUI that abstracts the differences.</p>
+<blockquote>
+<p><em>(Targeting Linux? Window decoration behavior on GNOME differs from macOS and Windows in ways worth knowing before you ship — see Appendix C.)</em></p>
+</blockquote>
 <h3 id="the-clipboard-and-the-fork-boundary"><a class="header" href="#the-clipboard-and-the-fork-boundary">The Clipboard and The Fork Boundary</a></h3>
 <p>To support copying and pasting, GPUI provides clipboard read/write capabilities. The exact API shape is subject to change, but the pattern is consistent: you access clipboard services through the context object <code>cx</code> and interact with them asynchronously.</p>
 <p>Integrating the clipboard highlights a critical architectural boundary if you are using third-party libraries. Recall from Chapter 10 that <code>gpui-component</code> provides an excellent, pre-built <code>InputState</code> for text editing. But <code>gpui-component</code> is strictly a UI library. It provides the text buffer manipulation, cursor positioning, and event handling, but <strong>clipboard APIs remain strictly at the raw GPUI framework level</strong>.</p>
@@ -1501,11 +1504,10 @@ async fn test_clipboard_interaction(cx: &amp;mut TestAppContext) {
 <p>You have built your application. The text input works, the platform features are wired, and the pure core is thoroughly tested. Now comes the final step: getting your binary into users’ hands.</p>
 <p>Distribution is where GPUI’s native foundation pays its largest dividend. No runtime, no embedded browser, no second executable to manage. Just a compiled binary and the system libraries it depends on.</p>
 <h3 id="binary-size-the-actual-numbers"><a class="header" href="#binary-size-the-actual-numbers">Binary Size: The Actual Numbers</a></h3>
-<p>Let’s start with the comparison every developer wants to see.</p>
-<p>A minimal Electron app — <code>node_modules</code>, Chromium, and a few hundred lines of JavaScript — clocks in between 80 and 150 megabytes compressed. The unpacked size is often over 200 megabytes. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.</p>
-<p>A minimal GPUI application, compiled in release mode with LTO (Link Time Optimization) enabled, typically lands between 10 and 15 megabytes on macOS and Windows, and slightly smaller on Linux. That is a factor of six to ten times smaller.</p>
-<p>Where does the difference come from? Electron ships a full web browser. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code. No hidden browser features.</p>
-<p>For a real-world example, consider a markdown previewer built with GPUI. The final binary, stripped of debug symbols and optimized for size, comes in around 8 megabytes. The same application built with Electron exceeds 90 megabytes.</p>
+<p>A minimal Electron app — <code>node_modules</code>, Chromium, and a few hundred lines of JavaScript — typically runs 80 to 150 megabytes compressed, often over 200 megabytes unpacked. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.</p>
+<p>A minimal GPUI application, compiled in release mode with LTO enabled and stripped of debug symbols, typically lands in the single-digit to low double-digit megabytes — roughly a factor of six to ten times smaller, depending on platform and what your app includes.</p>
+<p>Where does the difference come from? Electron ships a full web browser alongside your code. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code, no hidden browser features.</p>
+<p>To put a number on it: a markdown previewer with the functionality we sketched in Chapter 12, built with GPUI and optimized for size, comes in around 8 megabytes. A comparable Electron application — same features, plus Chromium — exceeds 90 megabytes. The exact figures will vary by platform and what your app includes, but the order of magnitude is the point: GPUI ships your app, not a browser.</p>
 <h3 id="build-pipeline"><a class="header" href="#build-pipeline">Build Pipeline</a></h3>
 <p>The simplest distribution pipeline for a GPUI application is <code>cargo build --release</code>. This produces a binary in <code>target/release/</code> that you can rename, sign, and bundle.</p>
 <pre><code class="language-bash">cargo build --release --target x86_64-pc-windows-msvc   # Windows
@@ -1513,8 +1515,8 @@ cargo build --release --target x86_64-apple-darwin      # macOS Intel
 cargo build --release --target aarch64-apple-darwin     # macOS Apple Silicon
 cargo build --release --target x86_64-unknown-linux-gnu # Linux
 </code></pre>
-<p>For cross-compilation from a single machine, use <code>cargo cross</code>, which manages toolchain and linker configuration via Docker containers.</p>
-<pre><code class="language-bash">cargo cross build --release --target aarch64-apple-darwin
+<p>For cross-compilation from a single machine, use <code>cross</code>, which manages toolchain and linker configuration via Docker containers.</p>
+<pre><code class="language-bash">cross build --release --target aarch64-apple-darwin
 </code></pre>
 <h3 id="code-signing-and-notarization"><a class="header" href="#code-signing-and-notarization">Code Signing and Notarization</a></h3>
 <p>Code signing is non-negotiable for distribution on macOS and Windows. Users expect applications that open without security warnings.</p>
@@ -1588,26 +1590,25 @@ xcrun notarytool submit myapp.zip --apple-id your@email.com --team-id TEAMID --w
 <p>If you bet on GPUI the framework — the specific crate from Zed Industries — you are betting on an editor-first tool that may never add custom shaders, transforms, or a headless primitives layer. That bet pays off only if your application looks like an editor.</p>
 <p>But if you bet on Rust the language, you have made a different bet entirely.</p>
 <h3 id="where-rust-is-heading"><a class="header" href="#where-rust-is-heading">Where Rust Is Heading</a></h3>
-<p>Rust is becoming the lingua franca of native application development. The borrow checker, once a barrier, is now recognized as the only sane way to manage memory without garbage collection. The type system enables UI patterns — like the entity-component architecture GPUI uses — that would be fragile or impossible in dynamic languages.</p>
-<p>The evidence is everywhere. Tauri lets you build webview-based apps with Rust backends. Slint and SixtyFPS provide declarative UI toolkits. Dioxus and Leptos bring React-like patterns to native rendering. And GPUI proves that a GPU-accelerated, native-feeling desktop framework can exist without a garbage collector.</p>
-<p>These frameworks will not converge on a single API. But they are converging on Rust as the implementation language. Learning GPUI teaches you patterns — entity management, subscription-based event propagation, async UI patterns — that transfer directly to other Rust UI frameworks.</p>
+<p>Rust is becoming one of the primary languages for native application development. The borrow checker, once the steepest part of the learning curve, increasingly looks like a reasonable price for memory safety without a garbage collector — whether you arrived at that conclusion from C++’s manual memory management or from chasing down a reference-counting cycle in a higher-level language.</p>
+<p>The evidence is everywhere. Tauri lets you build webview-based apps with Rust backends. Slint provides a declarative UI toolkit with its own rendering. Dioxus and Leptos bring reactive, signal-based patterns to native and web rendering alike. And GPUI proves that a GPU-accelerated, native-feeling desktop framework can exist without a garbage collector.</p>
+<p>These frameworks will not converge on a single API. Dioxus’s signals and GPUI’s <code>Entity&lt;T&gt;</code> are not the same mechanism. But they share a mental model that’s distinctly Rust’s own: the framework owns the data, you request access through a context, and the type system enforces the boundary. Learning that mental model in GPUI means recognizing it instantly elsewhere.</p>
 <h3 id="why-this-investment-compounds"><a class="header" href="#why-this-investment-compounds">Why This Investment Compounds</a></h3>
-<p>The specific skills you have learned in this book are not GPUI trivia. They are Rust architecture patterns dressed in GPUI syntax.</p>
-<ul>
-<li><strong>The pure core pattern</strong> (Chapter 12) is not GPUI-specific. It applies to any framework where you want to separate domain logic from presentation.</li>
-<li><strong>Entity-based state management</strong> (using <code>Entity&lt;T&gt;</code> and <code>cx.notify()</code>) is how Dioxus handles state. It is how Leptos handles signals. It is the pattern Rust UI frameworks have converged on.</li>
-<li><strong>Subscription-based event propagation</strong> is how you build decoupled systems in any actor-like architecture.</li>
-<li><strong>The <code>WeakEntity</code> pattern</strong> for async safety (Chapter 3) is directly transferable to any framework with similar ownership semantics.</li>
-</ul>
-<p>You have learned Rust architecture, not just GPUI. That investment compounds regardless of which fork wins — or whether GPUI survives at all.</p>
-<h3 id="one-year-from-now"><a class="header" href="#one-year-from-now">One Year From Now</a></h3>
-<p>Where will the GPUI ecosystem be in a year? No one knows. But the forks provide insurance.</p>
-<p>If Zed continues to prioritize editor features, Kael or WGPUI or gpui-ce will absorb the community’s energy. The best parts of each fork will be shared. The custom shader API that Kael is designing will inform gpui-ce’s implementation. The wgpu backend that WGPUI built will eventually influence upstream.</p>
-<p>Fragmentation is not failure. It is the ecosystem learning which designs work. The forges that produce the best solutions will attract the most users. Consolidation will follow — not because someone decrees it, but because developers choose the tools that work.</p>
+<p>The specific skills you have learned in this book are not GPUI trivia. They are Rust architecture patterns expressed through GPUI’s particular syntax.</p>
+<p>The pure core pattern (Chapter 12) is not GPUI-specific. It applies to any framework where you want to separate domain logic from presentation — and it’s good practice even outside Rust.</p>
+<p>The ownership-mediated state model — requesting access through a context, notifying on change — is a shape you’ll recognize in other Rust UI frameworks even when the specific types differ.</p>
+<p>Subscription-based event propagation is how you build decoupled systems in any actor-like architecture, in any language.</p>
+<p>The <code>WeakEntity</code> pattern for async safety (Chapter 3) is directly transferable to any framework with similar ownership semantics.</p>
+<p>You have learned Rust architecture, not just GPUI. That investment compounds regardless of which fork wins — or whether GPUI itself is still the dominant choice in a few years.</p>
+<h3 id="a-year-or-two-from-now"><a class="header" href="#a-year-or-two-from-now">A Year or Two From Now</a></h3>
+<p>Where will the GPUI ecosystem be a year or two from now? No one knows precisely. But the forks provide a kind of insurance.</p>
+<p>If Zed continues to prioritize editor features, the energy around custom shaders, unified rendering, and broader component libraries will likely concentrate in the forks — Kael, WGPUI, gpui-ce, or whichever combination of them proves most useful. Ideas may flow between them; a shader API design from one could inform another’s implementation. None of this is guaranteed, but it’s the normal pattern for how open ecosystems mature.</p>
+<p>Fragmentation isn’t failure. It’s the ecosystem learning which designs work. The forks that produce the best solutions will attract the most users, and consolidation tends to follow — not by decree, but because developers choose the tools that work.</p>
 <h3 id="the-final-trade"><a class="header" href="#the-final-trade">The Final Trade</a></h3>
 <p>You can wait for the perfect framework. You will wait forever.</p>
-<p>Or you can build with what exists, separate your domain logic from your UI, and remain portable across frameworks. That is what this book has taught. Your business logic is pure Rust. Your UI is a thin wrapper. When the ecosystem shifts — and it will — you rewrite the wrapper. The core remains.</p>
-<p>That is the lingua franca argument. Rust is the constant. GPUI is one expression of it. Learn the patterns, not the incantations. Build the product, not the framework tribute.</p>
+<p>Or you can build with what exists, separate your domain logic from your UI, and stay portable across frameworks. That’s what this book has taught. Your business logic is pure Rust. Your UI is a thin wrapper. When the ecosystem shifts — and it will — you rewrite the wrapper. The core remains.</p>
+<p>Whether you came to this book tired of CMake or tired of shipping Chromium, you arrived at the same place: a language that takes your existing instincts seriously and a framework that puts native pixels on the screen without ceremony.</p>
+<p>That’s the lingua franca argument. Rust is the constant. GPUI is one expression of it. Learn the patterns, not the incantations. Build the product, not the framework tribute.</p>
 <p>And ship.</p>
 <div style="break-before: page; page-break-before: always;"></div>
 <h1 id="appendix-a-gpuis-origins--the-zed-interview-and-what-it-reveals"><a class="header" href="#appendix-a-gpuis-origins--the-zed-interview-and-what-it-reveals">Appendix A: GPUI’s Origins — The Zed Interview and What It Reveals</a></h1>
@@ -1697,6 +1698,23 @@ xcrun notarytool submit myapp.zip --apple-id your@email.com --team-id TEAMID --w
 <p>This is the exact reason Chapter 12’s Pure Core Pattern is not just academic architecture. It is a practical defense mechanism.</p>
 <p>By keeping your business logic in a <code>domain</code> crate that knows nothing about GPUI, <code>reqwest</code>, or system-level dependencies, you isolate your application from Cargo’s friction. Your <code>domain</code> crate compiles quickly, and its tests run in milliseconds. Its <code>Cargo.toml</code> has only a handful of fundamental data-structuring crates.</p>
 <p>You let the UI crate deal with the massive dependency trees, the framework updates, and the platform-specific build times. Your core logic stays fast, testable, and largely unaffected by the churn of the ecosystem.</p>
+<div style="break-before: page; page-break-before: always;"></div>
+<h1 id="appendix-c-the-linux-desktop-reality-1"><a href="#appendix-c-the-linux-desktop-reality-1" class="header">Appendix C: The Linux Desktop Reality</a></h1>
+<h2 id="appendix-c-the-linux-desktop-reality"><a class="header" href="#appendix-c-the-linux-desktop-reality">Appendix C: The Linux Desktop Reality</a></h2>
+<p>In a clean cross-platform world, you write your UI code once, and the operating system provides the window frame — title bar, resize borders, close button — while your framework draws the pixels inside it. On macOS and Windows, this assumption holds. On Linux, it doesn’t always.</p>
+<h3 id="server-side-and-client-side-decoration"><a class="header" href="#server-side-and-client-side-decoration">Server-Side and Client-Side Decoration</a></h3>
+<p>Linux windowing is currently mid-migration from the older X11 protocol to Wayland. Under Wayland, the compositor — the software responsible for drawing the screen — decides how windows are framed. Most modern compositors support an extension called <code>xdg-decoration-unstable-v1</code>, which lets applications request standard server-drawn decorations (Server-Side Decoration, or SSD) — the traditional model where the desktop environment draws your title bar and borders.</p>
+<p>GNOME, the default environment for Ubuntu, Fedora, and several other major distributions, does not implement this protocol. GNOME’s design philosophy favors Client-Side Decoration (CSD) — the idea that applications should draw their own title bars, integrate their toolbars into that space, and manage their own window chrome. This is a deliberate design choice with real motivations behind it — consistency of app integration, reduced duplication between toolbar and title bar — even if the practical effect, for a framework expecting SSD, is jarring.</p>
+<h3 id="what-this-means-for-your-gpui-app"><a class="header" href="#what-this-means-for-your-gpui-app">What This Means for Your GPUI App</a></h3>
+<p>GPUI is a foundational rendering layer, and by default it requests server-drawn decorations.¹ On GNOME under Wayland, a request for server decorations that the compositor doesn’t honor can result in a window with no title bar, no resize borders, and no close button — just a frameless rectangle. If your users don’t know a window-manager shortcut to close an unresponsive window, this is a genuinely bad first impression.</p>
+<p>If you’re targeting Linux — and Ubuntu and Fedora users are a meaningful share of any Linux desktop audience — this isn’t something to discover after shipping.</p>
+<h3 id="three-ways-to-handle-it"><a class="header" href="#three-ways-to-handle-it">Three Ways to Handle It</a></h3>
+<p><strong>Build your own decorations.</strong> Because GPUI gives you full control over pixels, you can draw your own title bar, implement drag-to-move by handling pointer events and passing move requests to the window manager, and draw your own resize borders. This is real work — you’re building a small part of a window manager — but it gives you full control over your app’s chrome on every platform, not just Linux.</p>
+<p><strong>Use a component library.</strong> As covered in Chapter 10, libraries like <code>gpui-component</code> aim to provide pre-built title bar and window-frame components designed to work correctly under CSD. If you’ve already adopted one of these libraries for other reasons, check whether it solves this problem for you as well.</p>
+<p><strong>Don’t support GNOME Wayland natively.</strong> Some applications simply document that GNOME users should run the app under XWayland — a compatibility layer that makes GNOME behave like X11 and draw a standard frame, sometimes with minor visual quirks. This is the lowest-effort option, but it pushes a workaround onto exactly the users least likely to know about it.</p>
+<p>None of these is universally right. The choice depends on how much of your audience runs GNOME, how much control you want over your app’s chrome anyway, and how much time you have before shipping. The point of this appendix isn’t to tell you which path to take — it’s to make sure you’re choosing deliberately, rather than discovering the frameless-rectangle problem from a confused bug report after launch.</p>
+<hr>
+<p><em>¹ Verify <code>WindowDecorations::Server</code> as GPUI’s actual default and exact behavior against current source before publication.</em></p>
 
                     </main>
 

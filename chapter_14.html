@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-093c5abd.js";
+            window.path_to_searchindex_js = "searchindex-566caf01.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a268ef12.js"></script>
+        <script src="toc-2064380b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -181,11 +181,10 @@
 <p>You have built your application. The text input works, the platform features are wired, and the pure core is thoroughly tested. Now comes the final step: getting your binary into users’ hands.</p>
 <p>Distribution is where GPUI’s native foundation pays its largest dividend. No runtime, no embedded browser, no second executable to manage. Just a compiled binary and the system libraries it depends on.</p>
 <h3 id="binary-size-the-actual-numbers"><a class="header" href="#binary-size-the-actual-numbers">Binary Size: The Actual Numbers</a></h3>
-<p>Let’s start with the comparison every developer wants to see.</p>
-<p>A minimal Electron app — <code>node_modules</code>, Chromium, and a few hundred lines of JavaScript — clocks in between 80 and 150 megabytes compressed. The unpacked size is often over 200 megabytes. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.</p>
-<p>A minimal GPUI application, compiled in release mode with LTO (Link Time Optimization) enabled, typically lands between 10 and 15 megabytes on macOS and Windows, and slightly smaller on Linux. That is a factor of six to ten times smaller.</p>
-<p>Where does the difference come from? Electron ships a full web browser. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code. No hidden browser features.</p>
-<p>For a real-world example, consider a markdown previewer built with GPUI. The final binary, stripped of debug symbols and optimized for size, comes in around 8 megabytes. The same application built with Electron exceeds 90 megabytes.</p>
+<p>A minimal Electron app — <code>node_modules</code>, Chromium, and a few hundred lines of JavaScript — typically runs 80 to 150 megabytes compressed, often over 200 megabytes unpacked. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.</p>
+<p>A minimal GPUI application, compiled in release mode with LTO enabled and stripped of debug symbols, typically lands in the single-digit to low double-digit megabytes — roughly a factor of six to ten times smaller, depending on platform and what your app includes.</p>
+<p>Where does the difference come from? Electron ships a full web browser alongside your code. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code, no hidden browser features.</p>
+<p>To put a number on it: a markdown previewer with the functionality we sketched in Chapter 12, built with GPUI and optimized for size, comes in around 8 megabytes. A comparable Electron application — same features, plus Chromium — exceeds 90 megabytes. The exact figures will vary by platform and what your app includes, but the order of magnitude is the point: GPUI ships your app, not a browser.</p>
 <h3 id="build-pipeline"><a class="header" href="#build-pipeline">Build Pipeline</a></h3>
 <p>The simplest distribution pipeline for a GPUI application is <code>cargo build --release</code>. This produces a binary in <code>target/release/</code> that you can rename, sign, and bundle.</p>
 <pre><code class="language-bash">cargo build --release --target x86_64-pc-windows-msvc   # Windows
@@ -193,8 +192,8 @@ cargo build --release --target x86_64-apple-darwin      # macOS Intel
 cargo build --release --target aarch64-apple-darwin     # macOS Apple Silicon
 cargo build --release --target x86_64-unknown-linux-gnu # Linux
 </code></pre>
-<p>For cross-compilation from a single machine, use <code>cargo cross</code>, which manages toolchain and linker configuration via Docker containers.</p>
-<pre><code class="language-bash">cargo cross build --release --target aarch64-apple-darwin
+<p>For cross-compilation from a single machine, use <code>cross</code>, which manages toolchain and linker configuration via Docker containers.</p>
+<pre><code class="language-bash">cross build --release --target aarch64-apple-darwin
 </code></pre>
 <h3 id="code-signing-and-notarization"><a class="header" href="#code-signing-and-notarization">Code Signing and Notarization</a></h3>
 <p>Code signing is non-negotiable for distribution on macOS and Windows. Users expect applications that open without security warnings.</p>

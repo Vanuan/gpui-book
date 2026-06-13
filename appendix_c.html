@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Epilogue: The Lingua Franca Argument - Rust and GPUI: Native Apps for the Rest of Us</title>
+        <title>Appendix C: The Linux Desktop Reality - Rust and GPUI: Native Apps for the Rest of Us</title>
 
 
         <!-- Custom HTML head -->
@@ -177,44 +177,30 @@
 
                 <div id="mdbook-content" class="content">
                     <main>
-                        <h2 id="epilogue-the-lingua-franca-argument"><a class="header" href="#epilogue-the-lingua-franca-argument">Epilogue: The Lingua Franca Argument</a></h2>
-<p>You have read fourteen chapters, built at least one application, and navigated a fragmented ecosystem of forks, components, and missing primitives. The natural question now is: was this worth it?</p>
-<p>The answer depends on what you are betting on.</p>
-<p>If you bet on GPUI the framework — the specific crate from Zed Industries — you are betting on an editor-first tool that may never add custom shaders, transforms, or a headless primitives layer. That bet pays off only if your application looks like an editor.</p>
-<p>But if you bet on Rust the language, you have made a different bet entirely.</p>
-<h3 id="where-rust-is-heading"><a class="header" href="#where-rust-is-heading">Where Rust Is Heading</a></h3>
-<p>Rust is becoming one of the primary languages for native application development. The borrow checker, once the steepest part of the learning curve, increasingly looks like a reasonable price for memory safety without a garbage collector — whether you arrived at that conclusion from C++’s manual memory management or from chasing down a reference-counting cycle in a higher-level language.</p>
-<p>The evidence is everywhere. Tauri lets you build webview-based apps with Rust backends. Slint provides a declarative UI toolkit with its own rendering. Dioxus and Leptos bring reactive, signal-based patterns to native and web rendering alike. And GPUI proves that a GPU-accelerated, native-feeling desktop framework can exist without a garbage collector.</p>
-<p>These frameworks will not converge on a single API. Dioxus’s signals and GPUI’s <code>Entity&lt;T&gt;</code> are not the same mechanism. But they share a mental model that’s distinctly Rust’s own: the framework owns the data, you request access through a context, and the type system enforces the boundary. Learning that mental model in GPUI means recognizing it instantly elsewhere.</p>
-<h3 id="why-this-investment-compounds"><a class="header" href="#why-this-investment-compounds">Why This Investment Compounds</a></h3>
-<p>The specific skills you have learned in this book are not GPUI trivia. They are Rust architecture patterns expressed through GPUI’s particular syntax.</p>
-<p>The pure core pattern (Chapter 12) is not GPUI-specific. It applies to any framework where you want to separate domain logic from presentation — and it’s good practice even outside Rust.</p>
-<p>The ownership-mediated state model — requesting access through a context, notifying on change — is a shape you’ll recognize in other Rust UI frameworks even when the specific types differ.</p>
-<p>Subscription-based event propagation is how you build decoupled systems in any actor-like architecture, in any language.</p>
-<p>The <code>WeakEntity</code> pattern for async safety (Chapter 3) is directly transferable to any framework with similar ownership semantics.</p>
-<p>You have learned Rust architecture, not just GPUI. That investment compounds regardless of which fork wins — or whether GPUI itself is still the dominant choice in a few years.</p>
-<h3 id="a-year-or-two-from-now"><a class="header" href="#a-year-or-two-from-now">A Year or Two From Now</a></h3>
-<p>Where will the GPUI ecosystem be a year or two from now? No one knows precisely. But the forks provide a kind of insurance.</p>
-<p>If Zed continues to prioritize editor features, the energy around custom shaders, unified rendering, and broader component libraries will likely concentrate in the forks — Kael, WGPUI, gpui-ce, or whichever combination of them proves most useful. Ideas may flow between them; a shader API design from one could inform another’s implementation. None of this is guaranteed, but it’s the normal pattern for how open ecosystems mature.</p>
-<p>Fragmentation isn’t failure. It’s the ecosystem learning which designs work. The forks that produce the best solutions will attract the most users, and consolidation tends to follow — not by decree, but because developers choose the tools that work.</p>
-<h3 id="the-final-trade"><a class="header" href="#the-final-trade">The Final Trade</a></h3>
-<p>You can wait for the perfect framework. You will wait forever.</p>
-<p>Or you can build with what exists, separate your domain logic from your UI, and stay portable across frameworks. That’s what this book has taught. Your business logic is pure Rust. Your UI is a thin wrapper. When the ecosystem shifts — and it will — you rewrite the wrapper. The core remains.</p>
-<p>Whether you came to this book tired of CMake or tired of shipping Chromium, you arrived at the same place: a language that takes your existing instincts seriously and a framework that puts native pixels on the screen without ceremony.</p>
-<p>That’s the lingua franca argument. Rust is the constant. GPUI is one expression of it. Learn the patterns, not the incantations. Build the product, not the framework tribute.</p>
-<p>And ship.</p>
+                        <h2 id="appendix-c-the-linux-desktop-reality"><a class="header" href="#appendix-c-the-linux-desktop-reality">Appendix C: The Linux Desktop Reality</a></h2>
+<p>In a clean cross-platform world, you write your UI code once, and the operating system provides the window frame — title bar, resize borders, close button — while your framework draws the pixels inside it. On macOS and Windows, this assumption holds. On Linux, it doesn’t always.</p>
+<h3 id="server-side-and-client-side-decoration"><a class="header" href="#server-side-and-client-side-decoration">Server-Side and Client-Side Decoration</a></h3>
+<p>Linux windowing is currently mid-migration from the older X11 protocol to Wayland. Under Wayland, the compositor — the software responsible for drawing the screen — decides how windows are framed. Most modern compositors support an extension called <code>xdg-decoration-unstable-v1</code>, which lets applications request standard server-drawn decorations (Server-Side Decoration, or SSD) — the traditional model where the desktop environment draws your title bar and borders.</p>
+<p>GNOME, the default environment for Ubuntu, Fedora, and several other major distributions, does not implement this protocol. GNOME’s design philosophy favors Client-Side Decoration (CSD) — the idea that applications should draw their own title bars, integrate their toolbars into that space, and manage their own window chrome. This is a deliberate design choice with real motivations behind it — consistency of app integration, reduced duplication between toolbar and title bar — even if the practical effect, for a framework expecting SSD, is jarring.</p>
+<h3 id="what-this-means-for-your-gpui-app"><a class="header" href="#what-this-means-for-your-gpui-app">What This Means for Your GPUI App</a></h3>
+<p>GPUI is a foundational rendering layer, and by default it requests server-drawn decorations.¹ On GNOME under Wayland, a request for server decorations that the compositor doesn’t honor can result in a window with no title bar, no resize borders, and no close button — just a frameless rectangle. If your users don’t know a window-manager shortcut to close an unresponsive window, this is a genuinely bad first impression.</p>
+<p>If you’re targeting Linux — and Ubuntu and Fedora users are a meaningful share of any Linux desktop audience — this isn’t something to discover after shipping.</p>
+<h3 id="three-ways-to-handle-it"><a class="header" href="#three-ways-to-handle-it">Three Ways to Handle It</a></h3>
+<p><strong>Build your own decorations.</strong> Because GPUI gives you full control over pixels, you can draw your own title bar, implement drag-to-move by handling pointer events and passing move requests to the window manager, and draw your own resize borders. This is real work — you’re building a small part of a window manager — but it gives you full control over your app’s chrome on every platform, not just Linux.</p>
+<p><strong>Use a component library.</strong> As covered in Chapter 10, libraries like <code>gpui-component</code> aim to provide pre-built title bar and window-frame components designed to work correctly under CSD. If you’ve already adopted one of these libraries for other reasons, check whether it solves this problem for you as well.</p>
+<p><strong>Don’t support GNOME Wayland natively.</strong> Some applications simply document that GNOME users should run the app under XWayland — a compatibility layer that makes GNOME behave like X11 and draw a standard frame, sometimes with minor visual quirks. This is the lowest-effort option, but it pushes a workaround onto exactly the users least likely to know about it.</p>
+<p>None of these is universally right. The choice depends on how much of your audience runs GNOME, how much control you want over your app’s chrome anyway, and how much time you have before shipping. The point of this appendix isn’t to tell you which path to take — it’s to make sure you’re choosing deliberately, rather than discovering the frameless-rectangle problem from a confused bug report after launch.</p>
+<hr>
+<p><em>¹ Verify <code>WindowDecorations::Server</code> as GPUI’s actual default and exact behavior against current source before publication.</em></p>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="chapter_14.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="appendix_b.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                             </a>
 
-                            <a rel="next prefetch" href="appendix_a.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -222,13 +208,10 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="chapter_14.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="appendix_b.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
                     </a>
 
-                    <a rel="next prefetch" href="appendix_a.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
-                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
-                    </a>
             </nav>
 
         </div>

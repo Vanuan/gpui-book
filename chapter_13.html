@@ -35,10 +35,10 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-093c5abd.js";
+            window.path_to_searchindex_js = "searchindex-566caf01.js";
         </script>
         <!-- Start loading toc.js asap -->
-        <script src="toc-a268ef12.js"></script>
+        <script src="toc-2064380b.js"></script>
     </head>
     <body>
     <div id="mdbook-help-container">
@@ -203,6 +203,9 @@
 <p>On macOS, you can enable native titlebar styling with <code>window.set_titlebar_appears_transparent()</code> or hide it entirely with <code>window.set_titlebar_hidden()</code>. When hidden, you become responsible for draggable regions — use <code>.on_drag()</code> on your custom titlebar element to allow window movement.</p>
 <p>On Windows and Linux, titlebar behavior is more constrained. Upstream GPUI provides basic titlebar configuration, but deep customization often requires platform-specific code or a fork. WGPUI, for example, offers more consistent titlebar handling across all three platforms due to its unified winit backend.</p>
 <p>The practical rule: for custom titlebars on macOS, use GPUI’s native APIs. For cross-platform custom titlebars, test each target or consider a fork like WGPUI that abstracts the differences.</p>
+<blockquote>
+<p><em>(Targeting Linux? Window decoration behavior on GNOME differs from macOS and Windows in ways worth knowing before you ship — see Appendix C.)</em></p>
+</blockquote>
 <h3 id="the-clipboard-and-the-fork-boundary"><a class="header" href="#the-clipboard-and-the-fork-boundary">The Clipboard and The Fork Boundary</a></h3>
 <p>To support copying and pasting, GPUI provides clipboard read/write capabilities. The exact API shape is subject to change, but the pattern is consistent: you access clipboard services through the context object <code>cx</code> and interact with them asynchronously.</p>
 <p>Integrating the clipboard highlights a critical architectural boundary if you are using third-party libraries. Recall from Chapter 10 that <code>gpui-component</code> provides an excellent, pre-built <code>InputState</code> for text editing. But <code>gpui-component</code> is strictly a UI library. It provides the text buffer manipulation, cursor positioning, and event handling, but <strong>clipboard APIs remain strictly at the raw GPUI framework level</strong>.</p>
