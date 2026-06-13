@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-566caf01.js";
+            window.path_to_searchindex_js = "searchindex-73db92df.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2064380b.js"></script>
@@ -198,19 +198,21 @@
 <pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 </code></pre>
 <p>This installs <code>rustc</code> (the compiler) and <code>cargo</code> (the package manager — think npm, but for Rust). One command, no separate installs, no PATH archaeology. When it’s done, create your first project:</p>
-<pre><code class="language-bash"># A tool to create starter project
+<pre><code class="language-bash"># Install a tool to create starter project
+cargo install cargo-gpui --locked
 
-cargo install cargo-generate --lock
+# Create new starter project in the current directory
+# (choose backend and fill other details)
+cargo gpui new gpui_hello
 
-# cargo new gpui_hello
-
+# go to project and run it
 cd gpui_hello
-cargo add gpui
+cargo run
 </code></pre>
 <blockquote>
-<p><code>cargo add gpui</code> pulls in the GPUI framework and everything it depends on. (Curious what to expect from Cargo’s dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)</p>
+<p><code>cargo install cargo-gpui --locked</code> install the binary cargo-gpui, so that it gives you <code>cargo gpui</code> subcommand. <code>cargo gpui new</code> will generate <code>Cargo.toml</code> and other template files. <code>cargo run</code> will install the dependencies in <code>Cargo.toml</code>, execute <code>cargo build</code> and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo’s dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)</p>
 </blockquote>
-<p><code>cargo new</code> is your <code>npm init</code>. <code>cargo add gpui</code> pulls in the GPUI framework and everything it depends on. Open <code>src/main.rs</code>, delete what’s there, and paste this:</p>
+<p><code>cargo gpui new</code> is your <code>npm init</code>. It pulls in the GPUI framework and everything it depends on. It also provides a starter <code>main.rs</code> suitable for that backend. Open <code>src/main.rs</code>, delete what’s there, and paste this:</p>
 <pre class="playground"><code class="language-rust">use gpui::*;
 
 struct HelloWorld;
