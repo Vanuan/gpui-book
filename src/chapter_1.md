@@ -37,13 +37,15 @@ The first build takes a minute — Rust is compiling GPUI and its dependencies f
 
 ---
 
-**What Just Happened**
+**What's in the code**
 
-If you're coming from the web world, those twenty lines will feel surprisingly familiar.
+Open the `main.rs` in the editor.
 
-> Depending on the fork you selected and the version you chose, there might be some differences in API. But here's the major difference: `gpui_platform` contains `application()` factory that creates the app context. Earlier versions or other forks might recommend `App::new()`
+If you're coming from the web world, some lines will feel surprisingly familiar.
 
 `application().run()` is your `ReactDOM.render()`. It initializes the application, hooks into your operating system's native event loop, and hands control to the closure — the `|cx: &mut App| { ... }` block — where you set up your windows before the loop starts.
+
+> Depending on the fork you selected and the version you chose, there might be some differences in API. But here's the major difference: `gpui_platform` contains `application()` factory that creates the app context. Earlier versions or other forks might recommend `App::new()`
 
 `cx.open_window()` asks the operating system for a literal window frame. The `cx` here is a *context object* — you'll see it everywhere in GPUI. It's your handle into the framework's runtime, the thing you talk to when you want GPUI to do something on your behalf.
 
