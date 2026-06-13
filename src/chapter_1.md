@@ -25,35 +25,7 @@ cargo run
 
 > `cargo install cargo-gpui --locked` install the binary cargo-gpui, so that it gives you `cargo gpui` subcommand. `cargo gpui new` will generate `Cargo.toml` and other template files. `cargo run` will install the dependencies in `Cargo.toml`, execute `cargo build` and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo's dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)
 
-`cargo gpui new` is your `npm init`. It pulls in the GPUI framework and everything it depends on. It also provides a starter `main.rs` suitable for that backend. Open `src/main.rs`, delete what's there, and paste this:
-
-
-```rust
-use gpui::*;
-
-struct HelloWorld;
-
-impl Render for HelloWorld {
-    fn render(&mut self, _window: &mut Window, _cx: &mut Context<Self>) -> impl IntoElement {
-        div()
-            .flex()
-            .size_full()
-            .justify_center()
-            .items_center()
-            .bg(rgb(0x2d3748))
-            .text_color(rgb(0xffffff))
-            .child("Hello, GPUI!")
-    }
-}
-
-fn main() {
-    App::new().run(|cx: &mut App| {
-        cx.open_window(WindowOptions::default(), |_, cx| {
-            cx.new(|_| HelloWorld)
-        });
-    });
-}
-```
+`cargo gpui new` is your `npm init`. It pulls in the GPUI framework and everything it depends on. It also provides a starter `main.rs` suitable for that backend.
 
 Run it:
 
@@ -69,7 +41,9 @@ The first build takes a minute — Rust is compiling GPUI and its dependencies f
 
 If you're coming from the web world, those twenty lines will feel surprisingly familiar.
 
-`App::new().run()` is your `ReactDOM.render()`. It initializes the application, hooks into your operating system's native event loop, and hands control to the closure — the `|cx: &mut App| { ... }` block — where you set up your windows before the loop starts.
+> Depending on the fork you selected and the version you chose, there might be some differences in API. But here's the major difference: `gpui_platform` contains `application()` factory that creates the app context. Earlier versions or other forks might recommend `App::new()`
+
+`application().run()` is your `ReactDOM.render()`. It initializes the application, hooks into your operating system's native event loop, and hands control to the closure — the `|cx: &mut App| { ... }` block — where you set up your windows before the loop starts.
 
 `cx.open_window()` asks the operating system for a literal window frame. The `cx` here is a *context object* — you'll see it everywhere in GPUI. It's your handle into the framework's runtime, the thing you talk to when you want GPUI to do something on your behalf.
 
