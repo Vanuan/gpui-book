@@ -6,15 +6,15 @@ Distribution is where GPUI's native foundation pays its largest dividend. No run
 
 ### Binary Size: The Actual Numbers
 
-Let's start with the comparison every developer wants to see.
+A minimal Electron app — `node_modules`, Chromium, and a few hundred lines of JavaScript — typically runs 80 to 150 megabytes compressed, often over 200 megabytes unpacked. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.
 
-A minimal Electron app — `node_modules`, Chromium, and a few hundred lines of JavaScript — clocks in between 80 and 150 megabytes compressed. The unpacked size is often over 200 megabytes. Every Electron app ships the entire Chromium browser engine, regardless of whether the app needs tabs, devtools, or a PDF viewer.
+A minimal GPUI application, compiled in release mode with LTO enabled and stripped of debug symbols, typically lands in the single-digit to low double-digit megabytes — roughly a factor of six to ten times smaller, depending on platform and what your app includes.
 
-A minimal GPUI application, compiled in release mode with LTO (Link Time Optimization) enabled, typically lands between 10 and 15 megabytes on macOS and Windows, and slightly smaller on Linux. That is a factor of six to ten times smaller.
+Where does the difference come from? Electron ships a full web browser alongside your code. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code, no hidden browser features.
 
-Where does the difference come from? Electron ships a full web browser. GPUI ships only what you use: the windowing glue, the GPU renderer, your application logic, and exactly the assets you include. No dead code. No hidden browser features.
+To put a number on it: a markdown previewer with the functionality we sketched in Chapter 12, built with GPUI and optimized for size, comes in around 8 megabytes. A comparable Electron application — same features, plus Chromium — exceeds 90 megabytes. The exact figures will vary by platform and what your app includes, but the order of magnitude is the point: GPUI ships your app, not a browser.
 
-For a real-world example, consider a markdown previewer built with GPUI. The final binary, stripped of debug symbols and optimized for size, comes in around 8 megabytes. The same application built with Electron exceeds 90 megabytes.
+
 
 ### Build Pipeline
 
@@ -27,10 +27,10 @@ cargo build --release --target aarch64-apple-darwin     # macOS Apple Silicon
 cargo build --release --target x86_64-unknown-linux-gnu # Linux
 ```
 
-For cross-compilation from a single machine, use `cargo cross`, which manages toolchain and linker configuration via Docker containers.
+For cross-compilation from a single machine, use `cross`, which manages toolchain and linker configuration via Docker containers.
 
 ```bash
-cargo cross build --release --target aarch64-apple-darwin
+cross build --release --target aarch64-apple-darwin
 ```
 
 ### Code Signing and Notarization

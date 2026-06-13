@@ -32,3 +32,4 @@
 
 [Appendix A: GPUI's Origins — The Zed Interview and What It Reveals](appendix_a.md)
 [Appendix B: The Cargo Expectation Gap](appendix_b.md)
+[Appendix C: The Linux Desktop Reality](appendix_c.md)

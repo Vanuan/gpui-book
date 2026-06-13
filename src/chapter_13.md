@@ -35,6 +35,8 @@ On Windows and Linux, titlebar behavior is more constrained. Upstream GPUI provi
 
 The practical rule: for custom titlebars on macOS, use GPUI's native APIs. For cross-platform custom titlebars, test each target or consider a fork like WGPUI that abstracts the differences.
 
+> *(Targeting Linux? Window decoration behavior on GNOME differs from macOS and Windows in ways worth knowing before you ship — see Appendix C.)*
+
 ### The Clipboard and The Fork Boundary
 
 To support copying and pasting, GPUI provides clipboard read/write capabilities. The exact API shape is subject to change, but the pattern is consistent: you access clipboard services through the context object `cx` and interact with them asynchronously.
