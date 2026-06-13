@@ -11,19 +11,21 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 This installs `rustc` (the compiler) and `cargo` (the package manager — think npm, but for Rust). One command, no separate installs, no PATH archaeology. When it's done, create your first project:
 
 ```bash
-# A tool to create starter project
+# Install a tool to create starter project
+cargo install cargo-gpui --locked
 
-cargo install cargo-generate --lock
+# Create new starter project in the current directory
+# (choose backend and fill other details)
+cargo gpui new gpui_hello
 
-# cargo new gpui_hello
-
+# go to project and run it
 cd gpui_hello
-cargo add gpui
+cargo run
 ```
 
-> `cargo add gpui` pulls in the GPUI framework and everything it depends on. (Curious what to expect from Cargo's dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)
+> `cargo install cargo-gpui --locked` install the binary cargo-gpui, so that it gives you `cargo gpui` subcommand. `cargo gpui new` will generate `Cargo.toml` and other template files. `cargo run` will install the dependencies in `Cargo.toml`, execute `cargo build` and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo's dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)
 
-`cargo new` is your `npm init`. `cargo add gpui` pulls in the GPUI framework and everything it depends on. Open `src/main.rs`, delete what's there, and paste this:
+`cargo gpui new` is your `npm init`. It pulls in the GPUI framework and everything it depends on. It also provides a starter `main.rs` suitable for that backend. Open `src/main.rs`, delete what's there, and paste this:
 
 
 ```rust
