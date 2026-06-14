@@ -36,7 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-444afb2a.js";
+            window.path_to_searchindex_js = "searchindex-233b8fe3.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2064380b.js"></script>
@@ -206,14 +206,27 @@ cargo install cargo-gpui --locked
 # Create new starter project in the current directory (choose backend/fork when prompted)
 cargo gpui new gpui_hello
 
+# When prompted:
+#   - Choose "gpui-unofficial" (or your preferred backend)
+#   - Choose "hello-world" starter template
+
+
 cd gpui_hello
 cargo run
 </code></pre>
 <p><code>cargo gpui new</code> is your <code>npm init</code>. It puts all the GPUI libraries into <code>Cargo.toml</code> manifest, and writes a <code>main.rs</code> suitable for whichever fork you picked.</p>
-<p>Everything from here on assumes the <code>gpui-ce</code> fork; if your
-generated <code>main.rs</code> looks different, that’s expected — it means the
-generator already adapted this chapter’s code to your fork, and you should
-follow your generated file.</p>
+<blockquote>
+<p>📝 <strong>Note</strong>: When you run cargo gpui new, the generator will ask you two questions:</p>
+</blockquote>
+<blockquote>
+<ul>
+<li><strong>Which GPUI backend?</strong> → Select gpui-unofficial (or your preferred fork)</li>
+<li><strong>Which example/starter?</strong> → Select hello-world</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>The rest of this chapter assumes you’ve made these choices. If you picked something different, your generated <code>main.rs</code> will look different — that’s expected, and you should follow what was generated rather than the code examples here.</p>
+</blockquote>
 <blockquote>
 <p><code>cargo install cargo-gpui --locked</code> install the binary cargo-gpui, so that it gives you <code>cargo gpui</code> subcommand. <code>cargo gpui new</code> will generate <code>Cargo.toml</code> and other template files. <code>cargo run</code> will install the dependencies in <code>Cargo.toml</code>, execute <code>cargo build</code> and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo’s dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)</p>
 </blockquote>
