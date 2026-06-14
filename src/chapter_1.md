@@ -21,16 +21,23 @@ cargo install cargo-gpui --locked
 # Create new starter project in the current directory (choose backend/fork when prompted)
 cargo gpui new gpui_hello
 
+# When prompted:
+#   - Choose "gpui-unofficial" (or your preferred backend)
+#   - Choose "hello-world" starter template
+
+
 cd gpui_hello
 cargo run
 ```
 
 `cargo gpui new` is your `npm init`. It puts all the GPUI libraries into `Cargo.toml` manifest, and writes a `main.rs` suitable for whichever fork you picked.
 
-Everything from here on assumes the `gpui-ce` fork; if your
-generated `main.rs` looks different, that's expected — it means the
-generator already adapted this chapter's code to your fork, and you should
-follow your generated file.
+> 📝 **Note**: When you run cargo gpui new, the generator will ask you two questions:
+
+> - **Which GPUI backend?** → Select gpui-unofficial (or your preferred fork)
+> - **Which example/starter?** → Select hello-world
+
+> The rest of this chapter assumes you've made these choices. If you picked something different, your generated `main.rs` will look different — that's expected, and you should follow what was generated rather than the code examples here.
 
 > `cargo install cargo-gpui --locked` install the binary cargo-gpui, so that it gives you `cargo gpui` subcommand. `cargo gpui new` will generate `Cargo.toml` and other template files. `cargo run` will install the dependencies in `Cargo.toml`, execute `cargo build` and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo's dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)
 
