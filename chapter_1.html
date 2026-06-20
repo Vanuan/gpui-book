@@ -35,7 +35,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
-            window.path_to_searchindex_js = "searchindex-233b8fe3.js";
+            window.path_to_searchindex_js = "searchindex-8c8f869d.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc-2064380b.js"></script>
@@ -178,12 +178,12 @@
                 <div id="mdbook-content" class="content">
                     <main>
                         <h1 id="chapter-1-open-a-window"><a class="header" href="#chapter-1-open-a-window">Chapter 1: Open a Window</a></h1>
-<p>Let’s skip the theory. Before we explain anything, we’re going to put a native window on your screen.</p>
+<p>We’re going to put a native window on your screen.</p>
 <h2 id="install-rust-and-the-project-generator"><a class="header" href="#install-rust-and-the-project-generator">Install Rust and the project generator</a></h2>
 <p>If you don’t already have Rust:</p>
 <pre><code class="language-bash">curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 </code></pre>
-<p>This installs <code>rustc</code> (the compiler) and <code>cargo</code> (the package manager — think npm, but for Rust). One command, no separate installs, no PATH archaeology.</p>
+<p>This installs <code>rustc</code> (the compiler) and <code>cargo</code> (the package manager). <code>rustup</code> is one command that installs the whole Rust toolchain.</p>
 <p>Now install the project generator and create your first app:</p>
 <pre><code class="language-bash"># Install a tool to create starter projects
 cargo install cargo-gpui --locked
@@ -199,7 +199,7 @@ cargo gpui new gpui_hello
 cd gpui_hello
 cargo run
 </code></pre>
-<p><code>cargo gpui new</code> is your <code>npm init</code>. It puts all the GPUI libraries into <code>Cargo.toml</code> manifest, and writes a <code>main.rs</code> suitable for whichever fork you picked.</p>
+<p><code>cargo gpui new</code> works much like <code>npm init</code> for the Rust ecosystem: it adds the GPUI libraries to your <code>Cargo.toml</code> manifest and writes a <code>main.rs</code> suitable for whichever fork you picked.</p>
 <blockquote>
 <p>📝 <strong>Note</strong>: When you run cargo gpui new, the generator will ask you two questions:</p>
 </blockquote>
@@ -210,16 +210,16 @@ cargo run
 </ul>
 </blockquote>
 <blockquote>
-<p>The rest of this chapter assumes you’ve made these choices. If you picked something different, your generated <code>main.rs</code> will look different — that’s expected, and you should follow what was generated rather than the code examples here.</p>
+<p>The rest of this chapter assumes you’ve made these choices. If you picked something different, your generated <code>main.rs</code> might look different. Follow what was generated rather than the code examples here.</p>
 </blockquote>
 <blockquote>
-<p><code>cargo install cargo-gpui --locked</code> install the binary cargo-gpui, so that it gives you <code>cargo gpui</code> subcommand. <code>cargo gpui new</code> will generate <code>Cargo.toml</code> and other template files. <code>cargo run</code> will install the dependencies in <code>Cargo.toml</code>, execute <code>cargo build</code> and run the resulting command. The result is the selected gpui fork with a recommended version installed and a starter app running. (Curious what to expect from Cargo’s dependency model as your project grows? See Appendix B: The Cargo Expectation Gap.)</p>
+<p><code>cargo install cargo-gpui --locked</code> installs the <code>cargo-gpui</code> binary, which provides the <code>cargo gpui</code> subcommand. <code>cargo gpui new</code> generates <code>Cargo.toml</code> and other template files. <code>cargo run</code> resolves and builds dependencies, compiles the project, and runs the resulting binary. The result is the selected GPUI fork with a recommended version installed and a starter app running. (For more on Cargo’s dependency model, see Appendix B: The Cargo Expectation Gap.)</p>
 </blockquote>
 <h2 id="run-it"><a class="header" href="#run-it">Run it</a></h2>
 <pre><code class="language-bash">cargo run
 </code></pre>
-<p>The first build takes a minute — Rust is compiling GPUI and its dependencies from source, something that happens once and then caches. After that, a native window appears on your screen with “Hello, GPUI!” centered on a dark background. No Electron wrapper. No local web server. No Chromium. Native pixels, drawn directly by your GPU.</p>
-<p>Here’s what cargo <code>gpui new</code> just wrote for you:</p>
+<p>The first build takes a minute — Rust compiles GPUI and its dependencies from source, then caches the result. After that, a native window appears on your screen with “Hello, GPUI!” centered on a dark background. There’s no Electron wrapper, local web server, or Chromium — it renders native pixels directly.</p>
+<p>Here’s what <code>cargo gpui new</code> just wrote for you:</p>
 <pre class="playground"><code class="language-rust">use gpui::*;
 use gpui_platform;
 
@@ -246,16 +246,15 @@ fn main() {
     });
 }</code></pre>
 <h2 id="what-just-happened"><a class="header" href="#what-just-happened">What just happened</a></h2>
-<p>Open the <code>main.rs</code> in the editor.</p>
-<p>If you’re coming from the web world or done some desktop application development, some lines will feel familiar.</p>
-<p><code>application().run()</code> is your <code>ReactDOM.render()</code>. It initializes the application, hooks into your operating system’s event loop, and hands control to the closure — the <code>|cx: &amp;mut App| { ... }</code> block — where you set up your windows before the loop starts.</p>
+<p>Open <code>main.rs</code> in your editor.</p>
+<p><code>application().run()</code> plays a role similar to <code>ReactDOM.render()</code> in React or <code>app.exec()</code> in Qt: it initializes the application, hooks into your operating system’s event loop, and hands control to the closure (the <code>|cx: &amp;mut App| { ... }</code> block) where you set up your windows before the loop starts.</p>
 <blockquote>
-<p>Depending on the fork you selected and the version you chose, there might be some differences in API. But here’s the major difference: <code>gpui_platform</code> contains <code>application()</code> factory that creates the app context. Earlier versions or other forks use <code>Application::new() or App::new()</code>.</p>
+<p>Depending on the fork you selected and the version you chose, there might be some differences in API. The major difference: <code>gpui_platform</code> contains the <code>application()</code> factory that creates the app context. Earlier versions or other forks use <code>Application::new()</code> or <code>App::new()</code>.</p>
 </blockquote>
-<p><code>cx.open_window()</code> asks the operating system (compositor) for a window frame/surface. The <code>cx</code> here is a context object — you’ll see it everywhere in GPUI. It’s your handle into the framework’s runtime, the thing you talk to when you want GPUI to do something for you.</p>
-<p><code>HelloWorld</code> is your root component. Right now it’s an empty struct — just a named type with no data — but it’s about to become the home for your application state.</p>
-<p><code>impl Render for HelloWorld</code> is your component’s render method. Whenever the screen needs to update, GPUI calls this function and asks: what should I draw right now? You return a description of the UI — not pixels directly, but a high-level declaration — and GPUI handles the rest.</p>
-<p><code>div()</code> is where it starts feeling like Tailwind. GPUI’s layout engine is built on Flexbox, the same model powering every modern browser. The method chain reads almost like a CSS class list: make it a flex container, fill the full size, center horizontally, center vertically, set the background color, set the text color, add a child. If you’ve written <code>.flex .h-full .w-full .justify-center .items-center</code> before, you already know some of GPUI.</p>
+<p><code>cx.open_window()</code> asks the operating system (compositor) for a window frame or surface. The <code>cx</code> here is a context object that provides access to the framework’s runtime, the primary interface for asking GPUI to perform actions.</p>
+<p><code>HelloWorld</code> is your root component. Right now it’s an empty struct but it will soon hold your application state.</p>
+<p><code>impl Render for HelloWorld</code> is your component’s render method. Whenever the screen needs to update, GPUI calls this function and asks: what should I draw right now? You return a description of the UI (not pixels directly, but a high-level declaration) and GPUI handles the rest.</p>
+<p><code>div()</code> is like <code>&lt;div/&gt;</code>. GPUI’s layout engine is built on Flexbox, one of the core layout models used in modern browsers. The method chain reads much like a CSS class list: make it a flex container, fill the full size, center horizontally, center vertically, set the background color, set the text color, add a child. GPUI’s fluent API follows Tailwind’s naming conventions. The method chain: <code>.flex()</code>, <code>.w_full()</code>, <code>.justify_center()</code>, <code>.items_center()</code> corresponds directly to <code>.flex</code>, <code>.w-full</code>, <code>.justify-center</code>, <code>.items-center</code> in this CSS framework.</p>
 <h2 id="making-it-look-like-an-app"><a class="header" href="#making-it-look-like-an-app">Making It Look Like an App</a></h2>
 <p>Static text centered on a background isn’t very interesting. Let’s make it a bit more complex. Open <code>src/main.rs</code> and replace the <code>Render</code> implementation:</p>
 <pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -285,32 +284,22 @@ fn main() {
             )
     }
 <span class="boring">}</span></code></pre>
-<p>Run it again. Try resizing the window. Notice how instantly the layout recalculates — no jank, no reflow flicker. You have a responsive flex layout with a header bar and a content area, zero CSS, zero HTML.</p>
+<p>Run it again. Try resizing the window, so that the layout recalculates. You have a responsive flex layout with a header bar and a content area. The layout is defined entirely in Rust.</p>
 <blockquote>
-<p><strong>Linux readers</strong>, a heads-up: “try resizing the window” assumes you can
-find an edge to grab. On GNOME — the default desktop for Ubuntu, Fedora,
-and others — running under Wayland, you might not have one. GPUI’s
-default window decorations aren’t always honored by GNOME’s compositor,
-which can leave you with a frameless rectangle: no title bar, no resize
-borders, no close button. Nothing’s wrong with the code above — see
-<a href="appendix_c.html">Appendix C: The Linux Desktop Reality</a>
-for why this happens and how to handle it before you ship.</p>
+<p><strong>Linux readers</strong>, a heads-up: “try resizing the window” assumes you can find an edge to grab. On GNOME — the default desktop for Ubuntu, Fedora, and others running under Wayland, you might not have one. GPUI’s default window decorations aren’t always honored by GNOME’s compositor, which can leave you with a frameless rectangle. See <a href="appendix_c.html">Appendix C: The Linux Desktop Reality</a> for why this happens and how to handle it before you ship.</p>
 </blockquote>
-<p>The nesting model is direct: <code>.child()</code> takes anything that can be rendered and places it inside the current element. Layouts compose by nesting, exactly like JSX — except it’s all just Rust function calls returning descriptions that GPUI resolves into pixels.</p>
+<p>The nesting model is direct: <code>.child()</code> takes anything that can be rendered and places it inside the current element. Layouts compose by nesting, similar to how JSX nests components, except it’s all Rust function calls returning descriptions that GPUI resolves into pixels.</p>
 <h2 id="try-it-yourself"><a class="header" href="#try-it-yourself">Try it yourself</a></h2>
 <p>Before moving on, try changing a few things and re-running:</p>
 <ul>
-<li>Change <code>rgb(0x3b82f6)</code> to a different hex color and watch the header
-repaint.</li>
+<li>Change <code>rgb(0x3b82f6)</code> to a different hex color and watch the header repaint.</li>
 <li>Add a second <code>.child(...)</code> to the content area with different text.</li>
 <li>Delete the header <code>div()</code> entirely. What happens to the layout?</li>
 </ul>
-<p>Don’t be afraid to break something. The point is to get a feel for how changes
-to the Render method map onto what gets drawn, before Chapter 2 introduces
-state and the ownership model that makes this interactive.</p>
+<p>Experiment freely, the compiler will catch anything broken. These exercises show how changes to the Render method map directly to what gets displayed.</p>
 <h2 id="whats-missing"><a class="header" href="#whats-missing">What’s missing</a></h2>
 <p>The app looks real but it’s completely static. Click anywhere — nothing happens. There’s no state, no interactivity, no memory of anything the user has done.</p>
-<p>To fix that we need to give <code>HelloWorld</code> some data, and we need to learn how GPUI thinks about ownership. That’s Chapter 2 — and it’s where Rust starts to feel less like a foreign language and more like a better version of something you already know.</p>
+<p>To fix that we need to give <code>HelloWorld</code> some data, and we need to learn how GPUI thinks about ownership. That’s Chapter 2 — where we introduce state and GPUI’s ownership model.</p>
 
                     </main>
 
